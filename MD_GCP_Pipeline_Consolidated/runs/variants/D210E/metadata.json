@@ -1,0 +1,10 @@
+{
+  "variant": "D210E",
+  "classification": "neutral",
+  "source_pdb": "/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/inputs/variant_models_run1_model0/fold_zfp36l2_d210e_nonamer_wt_2zn_model_0_run1.pdb",
+  "source_tag": "run1_model0",
+  "temperature_k": 298.0,
+  "ph": 7.4,
+  "ionic_strength_m": 0.2,
+  "status": "ready_for_single_md_test"
+}

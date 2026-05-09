@@ -1,0 +1,11 @@
+variant,classification,source_pdb,source_tag,temperature_k,ph,ionic_strength_m,status
+WT,WT,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/inputs/variant_models_run1_model0/fold_zfp36l2_wt_nonamer_wt_2zn_model_0_run1.pdb,run1_model0,298,7.4,0.2,ready_for_single_md_test
+Y154H,deleterious,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/inputs/variant_models_run1_model0/fold_zfp36l2_y154h_nonamer_wt_2zn_model_0_run1.pdb,run1_model0,298,7.4,0.2,ready_for_single_md_test
+R160W,deleterious,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/inputs/variant_models_run1_model0/fold_zfp36l2_r160w_nonamer_wt_2zn_model_0_run1.pdb,run1_model0,298,7.4,0.2,ready_for_single_md_test
+R184C,deleterious,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/inputs/variant_models_run1_model0/fold_zfp36l2_r184c_nonamer_wt_2zn_model_0_run1.pdb,run1_model0,298,7.4,0.2,ready_for_single_md_test
+S185N,neutral,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/inputs/variant_models_run1_model0/fold_zfp36l2_s185n_nonamer_wt_2zn_model_0_run1.pdb,run1_model0,298,7.4,0.2,ready_for_single_md_test
+T187S,neutral,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/inputs/variant_models_run1_model0/fold_zfp36l2_t187s_nonamer_wt_2zn_model_0_run1.pdb,run1_model0,298,7.4,0.2,ready_for_single_md_test
+G204D,deleterious,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/inputs/variant_models_run1_model0/fold_zfp36l2_g204d_nonamer_wt_2zn_model_0_run1.pdb,run1_model0,298,7.4,0.2,ready_for_single_md_test
+C206F,deleterious,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/inputs/variant_models_run1_model0/fold_zfp36l2_c206f_nonamer_wt_2zn_model_0_run1.pdb,run1_model0,298,7.4,0.2,ready_for_single_md_test
+C208A,deleterious,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/inputs/variant_models_run1_model0/fold_zfp36l2_deleterious_c208a_model_0_run1.pdb,run1_model0,298,7.4,0.2,ready_for_single_md_test
+D210E,neutral,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/inputs/variant_models_run1_model0/fold_zfp36l2_d210e_nonamer_wt_2zn_model_0_run1.pdb,run1_model0,298,7.4,0.2,ready_for_single_md_test

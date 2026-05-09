@@ -1,0 +1,68 @@
+{
+  "taskGroups": [
+    {
+      "taskSpec": {
+        "runnables": [
+          {
+            "container": {
+              "imageUri": "us-west2-docker.pkg.dev/project-2f27e3aa-de6c-4f65-ad4/zfp36l2-md/zfp36l2-wt-smoke:20260428-080254",
+              "entrypoint": "/bin/bash",
+              "commands": [
+                "-lc",
+                "set -euo pipefail; mkdir -p /mnt/stateful_partition/share/outputs/wt_smoke; python /workspace/templates/zfp36l2_ubuntu_prep_run/run_minimal_md.py --pdbs /workspace/templates/zfp36l2_ubuntu_prep_run/cleaned_pdbs/fold_zfp36l2_wt_nanomer_9_wt_2zn_model_0_fixed.pdb --output-root /mnt/stateful_partition/share/outputs/wt_smoke --platform CUDA --stage1-ns 0.01 --stage2-ns 0.02 --production-ns 0.05"
+              ]
+            }
+          }
+        ],
+        "computeResource": {
+          "cpuMilli": 4000,
+          "memoryMib": 15360
+        },
+        "volumes": [
+          {
+            "gcs": {
+              "remotePath": "zfp36l2-md-20260428-12676"
+            },
+            "mountPath": "/mnt/stateful_partition/share"
+          }
+        ],
+        "maxRetryCount": 1,
+        "maxRunDuration": "14400s"
+      },
+      "taskCount": 1,
+      "parallelism": 1
+    }
+  ],
+  "allocationPolicy": {
+    "instances": [
+      {
+        "policy": {
+          "machineType": "n1-standard-4",
+          "accelerators": [
+            {
+              "type": "nvidia-tesla-t4",
+              "count": 1
+            }
+          ]
+        },
+        "installGpuDrivers": true
+      }
+    ],
+    "location": {
+      "allowedLocations": [
+        "zones/us-west2-b",
+        "zones/us-west2-c"
+      ]
+    },
+    "serviceAccount": {
+      "email": "524744582508-compute@developer.gserviceaccount.com"
+    }
+  },
+  "labels": {
+    "project": "zfp36l2",
+    "pipeline": "wt-smoke"
+  },
+  "logsPolicy": {
+    "destination": "CLOUD_LOGGING"
+  }
+}

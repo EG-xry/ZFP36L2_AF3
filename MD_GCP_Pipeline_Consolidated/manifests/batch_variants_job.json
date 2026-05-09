@@ -1,0 +1,157 @@
+{
+  "taskGroups": [
+    {
+      "taskSpec": {
+        "runnables": [
+          {
+            "container": {
+              "imageUri": "us-west2-docker.pkg.dev/project-2f27e3aa-de6c-4f65-ad4/zfp36l2-md/zfp36l2-minimal-md:20260428-190901",
+              "entrypoint": "/bin/bash",
+              "commands": [
+                "-lc",
+                "set -euo pipefail\nif [[ -z \"${VARIANT:-}\" || -z \"${REL_INPUT_PDB:-}\" ]]; then\n  echo \"Missing VARIANT or REL_INPUT_PDB task env vars.\"\n  exit 2\nfi\nMOUNT_ROOT=\"/mnt/stateful_partition/share\"\nIN_PDB=\"${MOUNT_ROOT}/${REL_INPUT_PDB}\"\nif [[ ! -f \"$IN_PDB\" ]]; then\n  echo \"Input PDB not found: $IN_PDB\"\n  ls -la \"${MOUNT_ROOT}/variants\" || true\n  exit 3\nfi\nSCRATCH_BASE=\"/tmp/zfp36l2_md/${VARIANT}_${BATCH_TASK_INDEX}\"\nCLEAN_DIR=\"${SCRATCH_BASE}/cleaned\"\nLOCAL_OUT=\"${SCRATCH_BASE}/output\"\nmkdir -p \"$LOCAL_OUT\" \"$CLEAN_DIR\"\npython /workspace/templates/zfp36l2_ubuntu_prep_run/clean_af3_structures.py --output-dir \"$CLEAN_DIR\" \"$IN_PDB\"\nCLEAN_PDB=\"$(find \"$CLEAN_DIR\" -maxdepth 1 -type f -name \"*_cleaned.pdb\" | head -n 1)\"\nif [[ -z \"${CLEAN_PDB}\" || ! -f \"${CLEAN_PDB}\" ]]; then\n  echo \"Failed to create cleaned PDB for ${VARIANT}\"\n  exit 4\nfi\npython /workspace/templates/zfp36l2_ubuntu_prep_run/run_minimal_md.py --pdbs \"$CLEAN_PDB\" --output-root \"$LOCAL_OUT\" --platform CPU --stage1-ns 0.01 --stage2-ns 0.02 --production-ns 0.23\nREMOTE_OUT=\"${MOUNT_ROOT}/outputs/variants/${VARIANT}\"\nmkdir -p \"$REMOTE_OUT\"\ncp -r \"$LOCAL_OUT\"/. \"$REMOTE_OUT\"/\nprintf \"VARIANT=%s\\nCLASSIFICATION=%s\\nREL_INPUT_PDB=%s\\nBATCH_TASK_INDEX=%s\\nBATCH_TASK_COUNT=%s\\n\" \"${VARIANT}\" \"${CLASSIFICATION:-unknown}\" \"${REL_INPUT_PDB}\" \"${BATCH_TASK_INDEX}\" \"${BATCH_TASK_COUNT}\" > \"${REMOTE_OUT}/task_metadata.env\"\nrm -rf \"$SCRATCH_BASE\"\necho \"Completed variant ${VARIANT}\""
+              ]
+            }
+          }
+        ],
+        "computeResource": {
+          "cpuMilli": 2000,
+          "memoryMib": 8192
+        },
+        "volumes": [
+          {
+            "gcs": {
+              "remotePath": "zfp36l2-md-20260428-12676"
+            },
+            "mountPath": "/mnt/stateful_partition/share"
+          }
+        ],
+        "maxRetryCount": 1,
+        "maxRunDuration": "28800s"
+      },
+      "taskEnvironments": [
+        {
+          "variables": {
+            "VARIANT": "WT",
+            "CLASSIFICATION": "WT",
+            "REL_INPUT_PDB": "variants/WT/input_af.pdb",
+            "TEMPERATURE_K": "298",
+            "PH": "7.4",
+            "IONIC_STRENGTH_M": "0.2"
+          }
+        },
+        {
+          "variables": {
+            "VARIANT": "Y154H",
+            "CLASSIFICATION": "deleterious",
+            "REL_INPUT_PDB": "variants/Y154H/input_af.pdb",
+            "TEMPERATURE_K": "298",
+            "PH": "7.4",
+            "IONIC_STRENGTH_M": "0.2"
+          }
+        },
+        {
+          "variables": {
+            "VARIANT": "R160W",
+            "CLASSIFICATION": "deleterious",
+            "REL_INPUT_PDB": "variants/R160W/input_af.pdb",
+            "TEMPERATURE_K": "298",
+            "PH": "7.4",
+            "IONIC_STRENGTH_M": "0.2"
+          }
+        },
+        {
+          "variables": {
+            "VARIANT": "R184C",
+            "CLASSIFICATION": "deleterious",
+            "REL_INPUT_PDB": "variants/R184C/input_af.pdb",
+            "TEMPERATURE_K": "298",
+            "PH": "7.4",
+            "IONIC_STRENGTH_M": "0.2"
+          }
+        },
+        {
+          "variables": {
+            "VARIANT": "S185N",
+            "CLASSIFICATION": "neutral",
+            "REL_INPUT_PDB": "variants/S185N/input_af.pdb",
+            "TEMPERATURE_K": "298",
+            "PH": "7.4",
+            "IONIC_STRENGTH_M": "0.2"
+          }
+        },
+        {
+          "variables": {
+            "VARIANT": "T187S",
+            "CLASSIFICATION": "neutral",
+            "REL_INPUT_PDB": "variants/T187S/input_af.pdb",
+            "TEMPERATURE_K": "298",
+            "PH": "7.4",
+            "IONIC_STRENGTH_M": "0.2"
+          }
+        },
+        {
+          "variables": {
+            "VARIANT": "G204D",
+            "CLASSIFICATION": "deleterious",
+            "REL_INPUT_PDB": "variants/G204D/input_af.pdb",
+            "TEMPERATURE_K": "298",
+            "PH": "7.4",
+            "IONIC_STRENGTH_M": "0.2"
+          }
+        },
+        {
+          "variables": {
+            "VARIANT": "C206F",
+            "CLASSIFICATION": "deleterious",
+            "REL_INPUT_PDB": "variants/C206F/input_af.pdb",
+            "TEMPERATURE_K": "298",
+            "PH": "7.4",
+            "IONIC_STRENGTH_M": "0.2"
+          }
+        },
+        {
+          "variables": {
+            "VARIANT": "C208A",
+            "CLASSIFICATION": "deleterious",
+            "REL_INPUT_PDB": "variants/C208A/input_af.pdb",
+            "TEMPERATURE_K": "298",
+            "PH": "7.4",
+            "IONIC_STRENGTH_M": "0.2"
+          }
+        },
+        {
+          "variables": {
+            "VARIANT": "D210E",
+            "CLASSIFICATION": "neutral",
+            "REL_INPUT_PDB": "variants/D210E/input_af.pdb",
+            "TEMPERATURE_K": "298",
+            "PH": "7.4",
+            "IONIC_STRENGTH_M": "0.2"
+          }
+        }
+      ],
+      "taskCount": 10,
+      "parallelism": 6
+    }
+  ],
+  "allocationPolicy": {
+    "instances": [
+      {
+        "policy": {
+          "machineType": "e2-standard-4"
+        }
+      }
+    ],
+    "serviceAccount": {
+      "email": "524744582508-compute@developer.gserviceaccount.com"
+    }
+  },
+  "labels": {
+    "project": "zfp36l2",
+    "pipeline": "variants-minimal-md"
+  },
+  "logsPolicy": {
+    "destination": "CLOUD_LOGGING"
+  }
+}

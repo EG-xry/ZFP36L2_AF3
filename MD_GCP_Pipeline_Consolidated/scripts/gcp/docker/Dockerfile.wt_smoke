@@ -1,0 +1,22 @@
+# WT cloud smoke-test runtime for ZFP36L2 minimal MD
+FROM continuumio/miniconda3:latest
+
+WORKDIR /workspace
+
+# Keep this runtime intentionally smaller than the full AF-MI image.
+RUN conda install -y -c conda-forge \
+    python=3.10 \
+    openmm \
+    mdtraj \
+    pandas \
+    numpy \
+    scipy \
+    biopython \
+    && conda clean -afy
+
+COPY templates/zfp36l2_ubuntu_prep_run /workspace/templates/zfp36l2_ubuntu_prep_run
+COPY scripts/utils /workspace/scripts/utils
+
+ENV OPENMM_DEFAULT_PLATFORM=CPU
+
+CMD ["/bin/bash"]

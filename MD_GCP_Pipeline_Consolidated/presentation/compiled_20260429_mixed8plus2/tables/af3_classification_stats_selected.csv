@@ -1,0 +1,2 @@
+metric,value,ci95_lo,ci95_hi,permutation_pvalue,n_variants
+auc_deleterious_vs_neutral,0.8571428571428571,0.5714285714285714,1.0,0.05634718264086796,10

@@ -1,0 +1,30 @@
+[{
+ "name": "ZFP36L2_R160E_Deleterious",
+ "modelSeeds": [
+  "879696552"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "STRYKTELCEPFEESGTCKYGEKCQFAHGFHELRSLTRHPKYKTELCRTFHTIGFCPYGPRCHFIHNADE",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  },
+  {
+   "rnaSequence": {
+    "sequence": "UUAUUUAUU",
+    "count": 1
+   }
+  },
+  {
+   "ion": {
+    "ion": "ZN",
+    "count": 2
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 3
+}
+]

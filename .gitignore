@@ -1,0 +1,49 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+
+# MD trajectories (regenerable, often exceed GitHub's 100 MB limit)
+*.dcd
+*.xtc
+*.trr
+*.nc
+*.h5
+*.hdf5
+
+# OpenMM checkpoints
+*.chk
+*.xml.gz
+
+# Third-party software clones — have their own upstream git repos
+AlphaFold/AlphaFold-IDP/
+AlphaFold/openmm-plumed/
+AlphaFold/OpenMM-Plumed-MPI/
+AlphaFold/openmm-8.0.0/
+AlphaFold/openmm-8.0.tar.gz
+
+# Local credentials / secrets
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+
+# Build / package outputs
+build/
+dist/
+*.tar
+*.tar.gz
+*.zip

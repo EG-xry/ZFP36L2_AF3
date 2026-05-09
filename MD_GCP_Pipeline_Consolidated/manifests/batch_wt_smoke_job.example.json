@@ -1,0 +1,52 @@
+{
+  "taskGroups": [
+    {
+      "taskSpec": {
+        "runnables": [
+          {
+            "container": {
+              "imageUri": "us-central1-docker.pkg.dev/PROJECT_ID/zfp36l2-md/zfp36l2-wt-smoke:example",
+              "entrypoint": "/bin/bash",
+              "commands": [
+                "-lc",
+                "set -euo pipefail; mkdir -p /mnt/stateful_partition/share/outputs/wt_smoke; python /workspace/templates/zfp36l2_ubuntu_prep_run/run_minimal_md.py --pdbs /workspace/templates/zfp36l2_ubuntu_prep_run/cleaned_pdbs/fold_zfp36l2_wt_nanomer_9_wt_2zn_model_0_fixed.pdb --output-root /mnt/stateful_partition/share/outputs/wt_smoke --platform CPU --stage1-ns 0.01 --stage2-ns 0.02 --production-ns 0.05"
+              ]
+            }
+          }
+        ],
+        "computeResource": {
+          "cpuMilli": 2000,
+          "memoryMib": 8192
+        },
+        "volumes": [
+          {
+            "gcs": {
+              "remotePath": "BUCKET_NAME"
+            },
+            "mountPath": "/mnt/stateful_partition/share"
+          }
+        ],
+        "maxRetryCount": 1,
+        "maxRunDuration": "14400s"
+      },
+      "taskCount": 1,
+      "parallelism": 1
+    }
+  ],
+  "allocationPolicy": {
+    "instances": [
+      {
+        "policy": {
+          "machineType": "e2-standard-4"
+        }
+      }
+    ]
+  },
+  "labels": {
+    "project": "zfp36l2",
+    "pipeline": "wt-smoke"
+  },
+  "logsPolicy": {
+    "destination": "CLOUD_LOGGING"
+  }
+}

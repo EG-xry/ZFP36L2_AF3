@@ -1,0 +1,3 @@
+Warning: importing 'simtk.openmm' is deprecated.  Import 'openmm' instead.
+/home/hemiola/Desktop/AlphaFold/AlphaFold-IDP/prep_run/simulate_em.py:32: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '0.038286503882254706' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
+  r.loc['H','q'] = 1. / ( 1 + 10**(pH-6) )

@@ -1,0 +1,11 @@
+variant,classification,run_source_group,production_profile,ca_rmsd_a_final_vs_start,p_rmsd_b_final_vs_start,delta_ca_vs_wt,delta_rna_vs_wt
+WT,WT,main_batch,short_0.05ns_like,1.9605,2.3229,0.0,0.0
+C206F,deleterious,main_batch,short_0.05ns_like,1.6011,2.4265,-0.35939999999999994,0.10359999999999969
+C208A,deleterious,fallback_short_rerun,short_0.10ns_like,0.9502,1.7726,-1.0103,-0.5503000000000002
+G204D,deleterious,main_batch,short_0.05ns_like,1.7148,1.6575,-0.2456999999999998,-0.6654000000000002
+R160W,deleterious,main_batch,short_0.05ns_like,1.2526,2.0487,-0.7079,-0.2742
+R184C,deleterious,main_batch,short_0.05ns_like,1.8485,2.1497,-0.11199999999999988,-0.17320000000000002
+Y154H,deleterious,main_batch,short_0.05ns_like,1.628,2.1397,-0.3325,-0.18320000000000025
+D210E,neutral,main_batch,short_0.05ns_like,1.7771,1.8153,-0.1834,-0.5076000000000003
+S185N,neutral,fallback_short_rerun,short_0.05ns_like,1.4643,1.6427,-0.4962,-0.6802000000000001
+T187S,neutral,main_batch,short_0.05ns_like,1.578,2.103,-0.38249999999999984,-0.21989999999999998

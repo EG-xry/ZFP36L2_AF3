@@ -1,0 +1,22 @@
+[
+  {
+    "variables": {
+      "VARIANT": "S185N",
+      "CLASSIFICATION": "neutral",
+      "REL_INPUT_PDB": "variants_failed_rerun/S185N/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  },
+  {
+    "variables": {
+      "VARIANT": "C208A",
+      "CLASSIFICATION": "deleterious",
+      "REL_INPUT_PDB": "variants_failed_rerun/C208A/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  }
+]

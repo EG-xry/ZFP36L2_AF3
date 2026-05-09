@@ -1,0 +1,30 @@
+[{
+ "name": "ZFP36L2_Deleterious_C208A",
+ "modelSeeds": [
+  "460103370"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "STRYKTELCRPFEESGTCKYGEKCQFAHGFHELRSLTRHPKYKTELCRTFHTIGFCPYGPRAHFIHNADE",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  },
+  {
+   "rnaSequence": {
+    "sequence": "UUAUUUAUU",
+    "count": 1
+   }
+  },
+  {
+   "ion": {
+    "ion": "ZN",
+    "count": 2
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 3
+}
+]

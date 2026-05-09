@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "ZFP36L2 AF3",
+			"path": ".."
+		},
+		{
+			"name": "attachments",
+			"path": "../../../Downloads/attachments"
+		},
+		{
+			"name": "AlphaFold",
+			"path": "../../../Downloads/AlphaFold"
+		}
+	],
+	"settings": {}
+}

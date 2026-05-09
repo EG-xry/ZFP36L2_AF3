@@ -1,0 +1,6 @@
+variant,mut_resid_local,wt_resname,mut_resname,mut_n_frames,mut_mean_hbonds,mut_p0,mut_p1,mut_p2,mut_p3plus,mut_max_hbonds,wt_n_frames,wt_mean_hbonds,wt_p0,wt_p1,wt_p2,wt_p3plus,wt_max_hbonds,delta_mean_hbonds
+Y154H,4,TYR,HIS,25,1.2,0.16,0.48,0.36,0.0,2,25,0.56,0.44,0.56,0.0,0.0,1,0.6399999999999999
+R160W,10,ARG,TRP,25,0.92,0.24,0.6,0.16,0.0,2,25,1.28,0.04,0.72,0.16,0.08,3,-0.36
+R184C,34,ARG,CYS,25,0.76,0.28,0.68,0.04,0.0,2,25,1.48,0.16,0.24,0.56,0.04,3,-0.72
+G204D,54,GLY,ASP,25,0.0,1.0,0.0,0.0,0.0,0,25,0.32,0.68,0.32,0.0,0.0,1,-0.32
+C206F,56,CYS,PHE,25,0.04,0.96,0.04,0.0,0.0,1,25,0.28,0.72,0.28,0.0,0.0,1,-0.24000000000000002

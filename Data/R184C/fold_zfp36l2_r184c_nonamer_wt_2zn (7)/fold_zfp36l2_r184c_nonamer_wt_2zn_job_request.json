@@ -1,0 +1,30 @@
+[{
+ "name": "ZFP36L2_R184C NONAMER_WT_2Zn_",
+ "modelSeeds": [
+  "1556494542"
+ ],
+ "sequences": [
+  {
+   "proteinChain": {
+    "sequence": "STRYKTELCRPFEESGTCKYGEKCQFAHGFHELCSLTRHPKYKTELCRTFHTIGFCPYGPRCHFIHNADE",
+    "count": 1,
+    "useStructureTemplate": true
+   }
+  },
+  {
+   "rnaSequence": {
+    "sequence": "UUAUUUAUU",
+    "count": 1
+   }
+  },
+  {
+   "ion": {
+    "ion": "ZN",
+    "count": 2
+   }
+  }
+ ],
+ "dialect": "alphafoldserver",
+ "version": 1
+}
+]

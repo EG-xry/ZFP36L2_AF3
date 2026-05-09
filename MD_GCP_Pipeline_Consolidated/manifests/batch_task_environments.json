@@ -1,0 +1,102 @@
+[
+  {
+    "variables": {
+      "VARIANT": "WT",
+      "CLASSIFICATION": "WT",
+      "REL_INPUT_PDB": "variants/WT/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  },
+  {
+    "variables": {
+      "VARIANT": "Y154H",
+      "CLASSIFICATION": "deleterious",
+      "REL_INPUT_PDB": "variants/Y154H/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  },
+  {
+    "variables": {
+      "VARIANT": "R160W",
+      "CLASSIFICATION": "deleterious",
+      "REL_INPUT_PDB": "variants/R160W/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  },
+  {
+    "variables": {
+      "VARIANT": "R184C",
+      "CLASSIFICATION": "deleterious",
+      "REL_INPUT_PDB": "variants/R184C/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  },
+  {
+    "variables": {
+      "VARIANT": "S185N",
+      "CLASSIFICATION": "neutral",
+      "REL_INPUT_PDB": "variants/S185N/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  },
+  {
+    "variables": {
+      "VARIANT": "T187S",
+      "CLASSIFICATION": "neutral",
+      "REL_INPUT_PDB": "variants/T187S/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  },
+  {
+    "variables": {
+      "VARIANT": "G204D",
+      "CLASSIFICATION": "deleterious",
+      "REL_INPUT_PDB": "variants/G204D/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  },
+  {
+    "variables": {
+      "VARIANT": "C206F",
+      "CLASSIFICATION": "deleterious",
+      "REL_INPUT_PDB": "variants/C206F/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  },
+  {
+    "variables": {
+      "VARIANT": "C208A",
+      "CLASSIFICATION": "deleterious",
+      "REL_INPUT_PDB": "variants/C208A/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  },
+  {
+    "variables": {
+      "VARIANT": "D210E",
+      "CLASSIFICATION": "neutral",
+      "REL_INPUT_PDB": "variants/D210E/input_af.pdb",
+      "TEMPERATURE_K": "298",
+      "PH": "7.4",
+      "IONIC_STRENGTH_M": "0.2"
+    }
+  }
+]

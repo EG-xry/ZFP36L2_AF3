@@ -1,0 +1,35 @@
+Block A - (linear RNA, WT sequence 5′-UAUAAAUAU-3′)
+ZFP36L2 ZFD variants modeled with the NANOMER WT RNA:
+WT + NANOMER WT
+G204D (deleterious) + NANOMER WT
+R160W (deleterious) + NANOMER WT
+R184C (deleterious) + NANOMER WT
+
+D210E (neutral) + NANOMER WT
+S185N (neutral) + NANOMER WT
+T187S (neutral) + NANOMER WT
+Y154H (neutral in this dataset) + NANOMER WT
+
+Block B - GM-CSF 17-mer (AU-rich ARE)
+RNA sequences:
+GM-CSF WT 17-mer: 5′-UGAAUUUAUUUAUUUAU-3′
+GM-CSF GC mutant 17-mer: 5′-GGAAUUUAUUUAUUUCU-3′
+ZFP36L2 ZFD variants modeled:
+WT + GM-CSF WT
+WT + GM-CSF GC mutant
+C206F (deleterious) + GM-CSF WT
+C206F (deleterious) + GM-CSF GC mutant
+D210E (neutral) + GM-CSF WT
+Y154H (neutral in this dataset, labelled Y145H in the PDB) + GM-CSF WT
+
+Block C
+WT + human LHR 20-mer WT
+WT + human LHR 20-mer CC mutant
+WT + mouse Apol11b 21-mer WT
+WT + mouse Apol11b 21-mer GC mutant
+
+MD analysis
+WT + GM-CSF 17-mer WT
+C206F + GM-CSF 17-mer WT
+D210E + GM-CSF 17-mer WT
+WT + GM-CSF GC-mutant

@@ -1,0 +1,24 @@
+# 2Zn runs: Zn1/Zn2 finger assignment stability summary
+
+| ComplexBase                         | ZnLabel   | AssignedFinger   |   n_models |   n_models_total |   pct_models |
+|:------------------------------------|:----------|:-----------------|-----------:|-----------------:|-------------:|
+| fold_zfp36l2_c206f_nonamer_wt_2zn   | Zn1       | ZF1              |          5 |                5 |          100 |
+| fold_zfp36l2_c206f_nonamer_wt_2zn   | Zn2       | ZF1              |          5 |                5 |          100 |
+| fold_zfp36l2_d210e_nonamer_wt_2zn   | Zn1       | ZF2              |          5 |                5 |          100 |
+| fold_zfp36l2_d210e_nonamer_wt_2zn   | Zn2       | ZF1              |          5 |                5 |          100 |
+| fold_zfp36l2_g204d_nonamer_wt_2zn   | Zn1       | ZF2              |          5 |                5 |          100 |
+| fold_zfp36l2_g204d_nonamer_wt_2zn   | Zn2       | ZF1              |          5 |                5 |          100 |
+| fold_zfp36l2_r160w_nonamer_wt_2zn   | Zn1       | ZF2              |          5 |                5 |          100 |
+| fold_zfp36l2_r160w_nonamer_wt_2zn   | Zn2       | ZF1              |          5 |                5 |          100 |
+| fold_zfp36l2_r184c_nonamer_wt_2zn   | Zn1       | ZF2              |          5 |                5 |          100 |
+| fold_zfp36l2_r184c_nonamer_wt_2zn   | Zn2       | ZF1              |          5 |                5 |          100 |
+| fold_zfp36l2_s185n_nonamer_wt_2zn   | Zn1       | ZF2              |          5 |                5 |          100 |
+| fold_zfp36l2_s185n_nonamer_wt_2zn   | Zn2       | ZF1              |          5 |                5 |          100 |
+| fold_zfp36l2_t187s_nonamer_wt_2zn   | Zn1       | ZF2              |          5 |                5 |          100 |
+| fold_zfp36l2_t187s_nonamer_wt_2zn   | Zn2       | ZF1              |          5 |                5 |          100 |
+| fold_zfp36l2_wt_nonamer_nonbind_2zn | Zn1       | ZF2              |          5 |                5 |          100 |
+| fold_zfp36l2_wt_nonamer_nonbind_2zn | Zn2       | ZF1              |          5 |                5 |          100 |
+| fold_zfp36l2_wt_nonamer_wt_2zn      | Zn1       | ZF2              |          5 |                5 |          100 |
+| fold_zfp36l2_wt_nonamer_wt_2zn      | Zn2       | ZF1              |          5 |                5 |          100 |
+| fold_zfp36l2_y154h_nonamer_wt_2zn   | Zn1       | ZF2              |          5 |                5 |          100 |
+| fold_zfp36l2_y154h_nonamer_wt_2zn   | Zn2       | ZF1              |          5 |                5 |          100 |

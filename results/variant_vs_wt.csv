@@ -1,0 +1,45 @@
+Protein,ProteinExpClass,Metric,WT_mean,Variant_mean,Difference,t_statistic,p_value,Significant (p<0.05),Direction vs WT,Better than WT,n_assumed_each_group
+C206F,deleterious,pair ipTM (protein–RNA),0.7775,0.7212,-0.0563,-16.6716,4.0309947647011334e-09,Yes,lower,No,8
+C206F,deleterious,PAE cross-mean (Å),1.0506,1.2219,0.1712,6.2592,7.848766154436906e-05,Yes,higher,No,8
+C206F,deleterious,pLDDT,96.9882,95.5677,-1.4205,-11.7744,5.086738094812285e-08,Yes,lower,No,8
+C206F,deleterious,pLDDT min (Cα),72.47,66.1012,-6.3688,-3.8857,0.0029149604416417677,Yes,lower,No,8
+C208A,deleterious,pair ipTM (protein–RNA),0.7775,0.7588,-0.0188,-5.5572,0.00017463352191753035,Yes,lower,No,8
+C208A,deleterious,PAE cross-mean (Å),1.0506,1.1612,0.1106,5.3482,0.00013211105037658024,Yes,higher,No,8
+C208A,deleterious,pLDDT,96.9882,97.1424,0.1542,1.8954,0.08149240871774499,No,higher,-,8
+C208A,deleterious,pLDDT min (Cα),72.47,73.2013,0.7313,0.3555,0.7275170607099308,No,higher,-,8
+G204D,deleterious,pair ipTM (protein–RNA),0.7775,0.7788,0.0012,0.4472,0.6622286655430774,No,higher,-,8
+G204D,deleterious,PAE cross-mean (Å),1.0506,1.0956,0.045,1.7849,0.10163089949043377,No,higher,-,8
+G204D,deleterious,pLDDT,96.9882,96.9344,-0.0538,-0.7298,0.4824633114167848,No,lower,-,8
+G204D,deleterious,pLDDT min (Cα),72.47,70.1012,-2.3688,-1.5283,0.16259377826237342,No,lower,-,8
+R160W,deleterious,pair ipTM (protein–RNA),0.7775,0.7637,-0.0138,-2.1282,0.06616387093265622,No,lower,-,8
+R160W,deleterious,PAE cross-mean (Å),1.0506,1.2663,0.2156,4.3131,0.002630251661881969,Yes,higher,No,8
+R160W,deleterious,pLDDT,96.9882,97.0879,0.0996,1.1133,0.2845986504017059,No,higher,-,8
+R160W,deleterious,pLDDT min (Cα),72.47,74.2262,1.7562,0.8544,0.40727429712575225,No,higher,-,8
+R160E,deleterious,pair ipTM (protein–RNA),0.7775,0.775,-0.0025,-1.0,0.33462172654047817,No,lower,-,8
+R160E,deleterious,PAE cross-mean (Å),1.0506,1.0719,0.0212,1.4475,0.1738942948522784,No,higher,-,8
+R160E,deleterious,pLDDT,96.9882,97.0399,0.0517,0.7259,0.48671082105993435,No,higher,-,8
+R160E,deleterious,pLDDT min (Cα),72.47,72.4875,0.0175,0.0111,0.9913720540487628,No,higher,-,8
+R184C,deleterious,pair ipTM (protein–RNA),0.7775,0.77,-0.0075,-2.3932,0.03458473811568636,Yes,lower,No,8
+R184C,deleterious,PAE cross-mean (Å),1.0506,1.0681,0.0175,0.9937,0.3372424471526001,No,higher,-,8
+R184C,deleterious,pLDDT,96.9882,96.7951,-0.1931,-1.9497,0.07168882349266573,No,lower,-,8
+R184C,deleterious,pLDDT min (Cα),72.47,70.5763,-1.8937,-1.0624,0.3083280866823678,No,lower,-,8
+Y154H,deleterious,pair ipTM (protein–RNA),0.7775,0.785,0.0075,2.3932,0.03458473811568857,Yes,higher,Yes *,8
+Y154H,deleterious,PAE cross-mean (Å),1.0506,1.0656,0.015,0.954,0.35727022125403374,No,higher,-,8
+Y154H,deleterious,pLDDT,96.9882,97.0031,0.0149,0.1916,0.8514592998014205,No,higher,-,8
+Y154H,deleterious,pLDDT min (Cα),72.47,70.6037,-1.8663,-1.075,0.3039061672080719,No,lower,-,8
+H212A,deleterious,pair ipTM (protein–RNA),0.7775,0.7775,0.0,0.0,1.0,No,equal,-,8
+H212A,deleterious,PAE cross-mean (Å),1.0506,1.0375,-0.0131,-0.6907,0.5012780571463719,No,lower,-,8
+H212A,deleterious,pLDDT,96.9882,96.8816,-0.1066,-1.0395,0.31659841096207536,No,lower,-,8
+H212A,deleterious,pLDDT min (Cα),72.47,82.65,10.18,4.8668,0.0002494104870107876,Yes,higher,Yes *,8
+D210E,neutral,pair ipTM (protein–RNA),0.7775,0.7763,-0.0012,-0.3444,0.7374025529169641,No,lower,-,8
+D210E,neutral,PAE cross-mean (Å),1.0506,1.0806,0.03,1.5121,0.15375146460881117,No,higher,-,8
+D210E,neutral,pLDDT,96.9882,96.9536,-0.0347,-0.2194,0.8307674078166112,No,lower,-,8
+D210E,neutral,pLDDT min (Cα),72.47,77.1325,4.6625,2.127,0.05186744185443494,No,higher,-,8
+S185N,neutral,pair ipTM (protein–RNA),0.7775,0.7812,0.0037,0.9697,0.35525893636423567,No,higher,-,8
+S185N,neutral,PAE cross-mean (Å),1.0506,1.0788,0.0281,1.283,0.22289185150234178,No,higher,-,8
+S185N,neutral,pLDDT,96.9882,97.1186,0.1304,1.5073,0.15480106580135583,No,higher,-,8
+S185N,neutral,pLDDT min (Cα),72.47,73.605,1.135,0.5209,0.6106154349158222,No,higher,-,8
+T187S,neutral,pair ipTM (protein–RNA),0.7775,0.77,-0.0075,-1.8209,0.10008445751672376,No,lower,-,8
+T187S,neutral,PAE cross-mean (Å),1.0506,1.0931,0.0425,2.223,0.0436120616889764,Yes,higher,No,8
+T187S,neutral,pLDDT,96.9882,96.9991,0.0108,0.1168,0.908717695210596,No,higher,-,8
+T187S,neutral,pLDDT min (Cα),72.47,74.5188,2.0488,1.2375,0.24286021449245154,No,higher,-,8

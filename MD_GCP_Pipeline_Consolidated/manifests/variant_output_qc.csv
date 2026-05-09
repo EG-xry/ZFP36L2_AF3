@@ -1,0 +1,11 @@
+variant,output_dir,has_output_dir,n_stats_csv,n_dcd,n_colvar,n_hills,n_logs,qc_status
+WT,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/runs/outputs/WT,false,0,0,0,0,0,incomplete
+Y154H,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/runs/outputs/Y154H,false,0,0,0,0,0,incomplete
+R160W,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/runs/outputs/R160W,false,0,0,0,0,0,incomplete
+R184C,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/runs/outputs/R184C,false,0,0,0,0,0,incomplete
+S185N,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/runs/outputs/S185N,false,0,0,0,0,0,incomplete
+T187S,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/runs/outputs/T187S,false,0,0,0,0,0,incomplete
+G204D,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/runs/outputs/G204D,false,0,0,0,0,0,incomplete
+C206F,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/runs/outputs/C206F,false,0,0,0,0,0,incomplete
+C208A,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/runs/outputs/C208A,false,0,0,0,0,0,incomplete
+D210E,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/runs/outputs/D210E,false,0,0,0,0,0,incomplete

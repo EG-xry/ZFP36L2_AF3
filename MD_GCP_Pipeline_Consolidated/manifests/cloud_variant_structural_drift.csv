@@ -1,0 +1,11 @@
+variant,classification,n_ca,ca_rmsd_a_final_vs_start,status
+WT,WT,70,1.9605,ok
+Y154H,deleterious,70,1.6280,ok
+R160W,deleterious,70,1.2526,ok
+R184C,deleterious,70,1.8485,ok
+S185N,neutral,70,1.4643,ok
+T187S,neutral,70,1.5780,ok
+G204D,deleterious,70,1.7148,ok
+C206F,deleterious,70,1.6011,ok
+C208A,deleterious,70,0.9502,ok
+D210E,neutral,70,1.7771,ok

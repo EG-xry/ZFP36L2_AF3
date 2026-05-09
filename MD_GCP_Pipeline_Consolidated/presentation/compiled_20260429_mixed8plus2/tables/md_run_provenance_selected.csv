@@ -1,0 +1,12 @@
+variant,classification,task_metadata_present,rel_input_pdb,batch_task_index,batch_task_count,run_source_group,prod_final_step,production_profile
+WT,WT,True,variants/WT/input_af.pdb,0,10,main_batch,25000,short_0.05ns_like
+Y154H,deleterious,True,variants/Y154H/input_af.pdb,1,10,main_batch,25000,short_0.05ns_like
+R160E,deleterious,False,no_md_run,unknown,unknown,no_md_run,,unknown
+R160W,deleterious,True,variants/R160W/input_af.pdb,2,10,main_batch,25000,short_0.05ns_like
+R184C,deleterious,True,variants/R184C/input_af.pdb,3,10,main_batch,25000,short_0.05ns_like
+S185N,neutral,True,variants_failed_rerun/S185N/input_af.pdb,0,2,fallback_short_rerun,25000,short_0.05ns_like
+T187S,neutral,True,variants/T187S/input_af.pdb,5,10,main_batch,25000,short_0.05ns_like
+G204D,deleterious,True,variants/G204D/input_af.pdb,6,10,main_batch,25000,short_0.05ns_like
+C206F,deleterious,True,variants/C206F/input_af.pdb,7,10,main_batch,25000,short_0.05ns_like
+C208A,deleterious,True,variants_failed_rerun/C208A/input_af.pdb,1,2,fallback_short_rerun,50000,short_0.10ns_like
+D210E,neutral,True,variants/D210E/input_af.pdb,9,10,main_batch,25000,short_0.05ns_like

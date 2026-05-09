@@ -1,0 +1,12 @@
+variant,classification,af3_composite_badness,pair_ipTM_protein_rna,pair_pae_min_cross_mean,pLDDT_min,ca_rmsd_a_final_vs_start,p_rmsd_b_final_vs_start,classification_md,prod_final_step,prod_temp_mean_k,prod_speed_mean_nsday,qc_status,run_source_group,production_profile
+C206F,deleterious,3.511662772141392,0.7097499999999999,1.27225,66.59774999999999,1.6011,2.4265,deleterious,25000.0,301.323,2.554,complete_minimal_md,main_batch,short_0.05ns_like
+C208A,deleterious,1.3235319751593557,0.7515,1.193625,74.84049999999999,0.9502,1.7726,deleterious,50000.0,300.316,0.681,complete_minimal_md,fallback_short_rerun,short_0.10ns_like
+D210E,neutral,0.013504077309404292,0.76925,1.0825,74.547,1.7771,1.8153,neutral,25000.0,301.172,1.106,complete_minimal_md,main_batch,short_0.05ns_like
+G204D,deleterious,0.5083828527795285,0.76675,1.119625,71.31625,1.7148,1.6575,deleterious,25000.0,301.434,1.297,complete_minimal_md,main_batch,short_0.05ns_like
+R160E,deleterious,0.5004575979249023,0.7615999999999999,1.1064,72.66720000000001,,,,,,,,no_md_run,unknown
+R160W,deleterious,2.068914873082123,0.75575,1.320125,75.7165,1.2526,2.0487,deleterious,25000.0,300.945,1.279,complete_minimal_md,main_batch,short_0.05ns_like
+R184C,deleterious,0.6613761153477383,0.7582500000000001,1.103,70.84125,1.8485,2.1497,deleterious,25000.0,301.417,1.214,complete_minimal_md,main_batch,short_0.05ns_like
+S185N,neutral,0.328065475488068,0.77075,1.121625,72.93525,1.4643,1.6427,neutral,25000.0,301.15,1.242,complete_minimal_md,fallback_short_rerun,short_0.05ns_like
+T187S,neutral,0.48060869232946585,0.7622500000000001,1.110875,73.361,1.578,2.103,neutral,25000.0,301.575,1.109,complete_minimal_md,main_batch,short_0.05ns_like
+WT,WT,0.0,0.76525,1.0755,76.24725,1.9605,2.3229,WT,25000.0,302.159,1.331,complete_minimal_md,main_batch,short_0.05ns_like
+Y154H,deleterious,-0.0639362515818122,0.77525,1.08975,73.559,1.628,2.1397,deleterious,25000.0,301.2,2.299,complete_minimal_md,main_batch,short_0.05ns_like

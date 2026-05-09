@@ -1,0 +1,119 @@
+===== PAGE 6 =====
+Molecular dynamics simulations
+Molecular dynamic simulations of both wild-type (WT) and 
+variant ZFP36L2 proteins (Y154H, R160W, R180C, C206F, 
+and G204D) were conducted using the GROMACS 2020.3 
+software package [ 55 ] employing the AMBER99SB force 
+field [ 56 ]. Each system was solvated in a cubic box of 
+TIP3P water molecules, ensuring a minimum distance of 
+10 Å between the protein and the box edges. The system 
+was neutralized by adding 0.15 M NaCl ions and maintained 
+under physiological conditions (310 K temperature, 1 bar 
+pressure) using NVT (constant number of particles, volume, 
+and temperature) and NPT (constant number of particles, 
+pressure, and temperature) ensembles. Prior to production 
+molecular dynamics simulation runs, the systems underwent 
+equilibration simulations for 10 ns with a time step of 2 fs. 
+During equilibration, positional restraints were applied to 
+the protein backbone atoms to relax the solvent molecules 
+around the protein. The LINCS algorithm [ 57 ] was 
+employed to constrain hydrogen bonds, allowing for 
+a stable integration of equations of motion. Long-range 
+electrostatic interactions were treated using the particle 
+mesh Ewald (PME) method [ 58 ] with a cut-off of 12 Å. 
+Following equilibration, the systems were subjected to pro -
+duction of molecular dynamics for 1000 ns for each system 
+to explore their dynamical behaviour and obtain statistically 
+significant data. Trajectories were saved at regular intervals 
+for subsequent analysis. We conducted three replicates of 
+molecular dynamics simulations for each of the ZFP36L2 
+variants to ensure the reliability and reproducibility of our 
+findings.
+Hydrogen Bond Analysis
+The hydrogen bonding patterns in both WT and mutant 
+ZFP36L2 proteins were analysed using the gmx hbond tool. 
+Hydrogen bonds were defined based on distance and angle 
+criteria between donor and acceptor atoms. A hydrogen bond 
+was considered formed if the distance between the hydrogen 
+and the acceptor atom was less than 3.5 Å and the angle 
+between the donor-hydrogen-acceptor was greater than 120º. 
+The occurrence and stability of hydrogen bonds throughout 
+the simulations were monitored and compared between WT 
+and mutant systems. The 3D structural visualization of aver -
+age conformations extracted from the molecular dynamics 
+trajectories was performed using the PyMOL Molecular 
+Graphics System (The PyMOL Molecular Graphics System, 
+Version 2.0 Schrödinger, LLC).
+Results
+The human ZFP36L2 transcript is 4,372 nucleotides long and 
+comprises two exons. Its coding gene is in the long arm of 
+chromosome 2. It has only one isoform/transcript that pro -
+duces a 494 amino acid-long protein [ 59 ]. The protein is 
+comprised of a tandem zinc finger domain in which the zinc 
+ions are coordinated by three cysteines and one histidine 
+(supplementary Figure S1). As the initial step of mRNA 
+decay, the tandem zinc finger domain recognizes and binds 
+to the UAUUUAU 7-mer, which is considered the minimal 
+core motif [ 26 ]. However, ZFP36 (TTP) seems to preferen -
+tially bind to multiple adjacent AREs, classified as ARE class II 
+[ 19 , 60 ].
+Prediction of deleterious nsSNPs using Sequence-based 
+Analysis Tools
+The workflow used for our study is schematized in supple -
+mentary Figure S3. Five hundred and fourteen SNPs for the 
+ZFP36L2 gene were retrieved from NCBI dbSNP. Out of 514 
+nsSNPs, only 32 nsSNPs are in the functional tandem zinc 
+finger domain of ZFP36L2 which is also the only domain with 
+a known three-dimensional structure in PDB. To predict 
+disease-related mutations, these 32 nsSNPs were classified 
+using PredictSNP (supplementary Table 1). PredictSNP is 
+a consensus classifier that combines the tools MAPP, PhD- 
+SNP, PolyPhen-1, PolyPhen-2, SIFT and SNAP to predict the 
+effects of nsSNPs on the protein function.
+Accordingly, five nsSNPs were identified as potential dele -
+terious variants simultaneously by the PredictSNP classifica -
+tion and by six other tools ( Figure 1A and supplementary 
+Table 1). The incidence of these five variants in the popula -
+tion is relatively low, with an allele frequency of 0.007% for 
+rs375096815 and 0.003% for rs1183688047, where
+
+===== PAGE 11 =====
+Molecular dynamics simulations of the five validated 
+nsSNPs
+To gain deeper insights into the structural consequences con -
+tributing to the decreased binding observed in all five vali -
+dated nsSNPs of ZFP36L2, we conducted molecular dynamics 
+simulations to unravel the dynamic behaviour of biomolecular 
+systems at an atomic level. In our study, we aimed to elucidate 
+how these mutations affect the stability of protein-RNA 
+complex by systematically quantifying H-bonds induced by 
+the residue of interest with surrounding residues patterns 
+throughout the molecular dynamic simulation trajectories. 
+For that, we performed 1000 ns-long molecular dynamics 
+simulations using the AMBER99SB force field and 
+GROMACS 2020.3. We quantified the respective H-bond- 
+forming capabilities with surrounding residues of the WT 
+and mutant ZFP36L2 proteins. Throughout the course of the 
+molecular dynamic simulations, we monitored the number of 
+hydrogen bonds formed by residues of interest in both the 
+WT and mutant ZFP36L2 proteins over time. We found 
+notable differences in the hydrogen bonding patterns between 
+the WT and mutant ZFP36L2 proteins. Specifically, we 
+observed that the mutant-induced hydrogen bonds with dis -
+tinct probabilities compared to the WT protein, indicating 
+a potential disruption in the native hydrogen bonding net -
+work within the protein structure. For instance, mutations, 
+such as Y154H and R160W, exhibited a higher probability of 
+forming one or two hydrogen bond interactions with sur -
+rounding residues, respectively, when compared to their WT 
+counterparts (Figure S13A and B). The R184C mutation abol -
+ished the number of hydrogen bonds formed with surround -
+ing residues, decreasing from 6 to 3 as depicted in Figure 
+S13C. This significant alteration in hydrogen bonding inter -
+actions suggests a structural perturbation induced by the 
+mutation, potentially disrupting the stability and dynamics 
+of the surrounding protein environment. Conversely, protein 
+Figure 5. Cellular temperature shift assay of the WT ZFP36L2 and the tree protein variants that most affected binding, Y154H, R184C and C206F are comparable, 
+suggesting similar protein stability.
+10
+ B. AKÇEŞME ET AL.

@@ -1,0 +1,3 @@
+task_index	variant	classification	rel_input_pdb
+0	S185N	neutral	variants_failed_rerun/S185N/input_af.pdb
+1	C208A	deleterious	variants_failed_rerun/C208A/input_af.pdb

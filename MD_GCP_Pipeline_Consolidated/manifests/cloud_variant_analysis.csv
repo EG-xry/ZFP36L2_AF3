@@ -1,0 +1,11 @@
+variant,classification,has_output_dir,has_md_log,has_production_dcd,has_final_frame_pdb,has_task_metadata,production_dcd_bytes,n_rows_total,n_stages_detected,prod_rows,prod_final_step,prod_temp_mean_k,prod_temp_sd_k,prod_potential_mean_kjmol,prod_potential_final_kjmol,prod_speed_mean_nsday,qc_status
+WT,WT,true,true,true,true,true,7430576,80,3,50,25000,302.159,6.405,-344933.483,-347287.268,1.331,complete_minimal_md
+Y154H,deleterious,true,true,true,true,true,7598276,80,3,50,25000,301.200,5.408,-353706.401,-354209.849,2.299,complete_minimal_md
+R160W,deleterious,true,true,true,true,true,6799676,80,3,50,25000,300.945,3.200,-315632.856,-315983.484,1.279,complete_minimal_md
+R184C,deleterious,true,true,true,true,true,7526876,80,3,50,25000,301.417,4.666,-349569.202,-350801.436,1.214,complete_minimal_md
+S185N,neutral,true,true,true,true,true,7238576,80,3,50,25000,301.150,4.449,-338536.668,-339650.687,1.242,complete_minimal_md
+T187S,neutral,true,true,true,true,true,7978976,80,3,50,25000,301.575,3.987,-371129.616,-372681.283,1.109,complete_minimal_md
+G204D,deleterious,true,true,true,true,true,6792176,80,3,50,25000,301.434,3.602,-316470.144,-317672.071,1.297,complete_minimal_md
+C206F,deleterious,true,true,true,true,true,6843476,80,3,50,25000,301.323,3.420,-317923.400,-319542.979,2.554,complete_minimal_md
+C208A,deleterious,true,true,true,true,true,7463276,80,3,50,50000,300.316,5.304,-328507.863,-322868.863,0.681,complete_minimal_md
+D210E,neutral,true,true,true,true,true,7929476,80,3,50,25000,301.172,3.886,-369622.424,-370544.609,1.106,complete_minimal_md

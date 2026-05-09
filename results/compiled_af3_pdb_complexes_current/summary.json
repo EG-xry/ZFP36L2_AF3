@@ -1,0 +1,36 @@
+{
+  "total_pdb_complexes": 425,
+  "source_root": "Data",
+  "pdb_directory": "results/compiled_af3_pdb_complexes_current/pdb",
+  "manifest_csv": "results/compiled_af3_pdb_complexes_current/af3_pdb_complex_manifest.csv",
+  "notes": [
+    "H212A PDB files removed from compiled bundle.",
+    "C208A labels and compiled PDB filenames renamed to C212A in compiled bundle."
+  ],
+  "complexes_by_group": {
+    "C206F": 40,
+    "D210E": 40,
+    "G204D": 40,
+    "R160E": 25,
+    "R160W": 40,
+    "R184C": 40,
+    "S185N": 40,
+    "T187S": 40,
+    "WT": 40,
+    "Y154H": 40,
+    "c212a": 40
+  },
+  "models_by_complex_base": {
+    "fold_zfp36l2_c206f_nonamer_wt_2zn": 40,
+    "fold_zfp36l2_d210e_nonamer_wt_2zn": 40,
+    "fold_zfp36l2_deleterious_c212a": 40,
+    "fold_zfp36l2_g204d_nonamer_wt_2zn": 40,
+    "fold_zfp36l2_r160e_deleterious": 25,
+    "fold_zfp36l2_r160w_nonamer_wt_2zn": 40,
+    "fold_zfp36l2_r184c_nonamer_wt_2zn": 40,
+    "fold_zfp36l2_s185n_nonamer_wt_2zn": 40,
+    "fold_zfp36l2_t187s_nonamer_wt_2zn": 40,
+    "fold_zfp36l2_wt_nonamer_wt_2zn": 40,
+    "fold_zfp36l2_y154h_nonamer_wt_2zn": 40
+  }
+}

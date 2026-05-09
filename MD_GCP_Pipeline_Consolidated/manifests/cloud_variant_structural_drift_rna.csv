@@ -1,0 +1,11 @@
+variant,classification,n_p,p_rmsd_b_final_vs_start,status
+WT,WT,8,2.3229,ok
+Y154H,deleterious,8,2.1397,ok
+R160W,deleterious,8,2.0487,ok
+R184C,deleterious,8,2.1497,ok
+S185N,neutral,8,1.6427,ok
+T187S,neutral,8,2.1030,ok
+G204D,deleterious,8,1.6575,ok
+C206F,deleterious,8,2.4265,ok
+C208A,deleterious,8,1.7726,ok
+D210E,neutral,8,1.8153,ok

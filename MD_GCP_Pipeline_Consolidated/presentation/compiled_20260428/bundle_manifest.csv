@@ -1,0 +1,6 @@
+key,value
+workspace_root,/Users/eric/Desktop/ZFP36L2 AF3
+consolidated_root,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated
+output_dir,/Users/eric/Desktop/ZFP36L2 AF3/MD_GCP_Pipeline_Consolidated/presentation/compiled_20260428
+selected_variants,"WT,Y154H,R160E,R160W,R184C,S185N,T187S,G204D,C206F,C208A,D210E"
+excluded_variants,H212A

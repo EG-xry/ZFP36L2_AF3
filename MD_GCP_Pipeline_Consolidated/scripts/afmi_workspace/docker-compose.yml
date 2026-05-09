@@ -1,0 +1,22 @@
+services:
+  afmi-tutorial:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: alphafold-metainference:latest
+    container_name: afmi-tutorial
+    volumes:
+      # Mount the prepared files from your Mac into the container
+      - ./AlphaFold-IDP/prep_run:/workspace/tutorial
+      # Mount results directory to save outputs
+      - ./docker-results:/workspace/results
+    working_dir: /workspace/tutorial
+    stdin_open: true
+    tty: true
+    environment:
+      - OMPI_ALLOW_RUN_AS_ROOT=1
+      - OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+    # For GUI/display (optional)
+    # ports:
+    #   - "8888:8888"
+
