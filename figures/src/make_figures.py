@@ -13,10 +13,10 @@ Inputs
 Outputs: figures/<name>.svg (editable text) + figures/<name>.png, and
 figures/data/tables.md with the numbers behind each figure.
 
-Which MD runs count: every Anvil replicate simulated the wild-type protein,
-whatever its folder says (see audit_md_runs.py). Variant readouts therefore
-use only runs whose topology carries the variant's mutation ("genuine"
-runs); the wild-type runs, misfiled ones included, form a wild-type noise set.
+Which MD runs count: the two Anvil run sets contain the wild-type protein in
+every folder (see audit_md_runs.py). Variant readouts use only runs whose
+topology carries the variant's mutation ("variant runs"); the wild-type runs
+form a wild-type consistency set.
 
 Naming: the MD code calls resSeq 6 "F156", but that residue is Thr156 of the
 RYKTEL motif. Five other per-residue columns carry the same kind of shifted
@@ -124,9 +124,9 @@ def exact_p(a: float) -> float:
 
 
 def wt_noise_p(runs: pd.DataFrame, col: str, sign: int, b: int = 20000) -> float:
-    """How often wild-type runs, dealt out as fake variants with the genuine run counts,
+    """How often wild-type runs, dealt out as fake variants with the variant run counts,
     rank at least as well as the real variants do."""
-    labeled = runs[runs["genuine"] & runs["label"].isin(S.DELETERIOUS + S.NEUTRAL)]
+    labeled = runs[runs["variant_run"] & runs["label"].isin(S.DELETERIOUS + S.NEUTRAL)]
     counts = labeled.groupby("label").size()
     observed = auroc(labeled.groupby("label")[col].mean().to_dict(), sign)
     pool = runs.loc[runs["wt_protein"], col].to_numpy()
@@ -186,7 +186,7 @@ def with_audit(df: pd.DataFrame, ns_col: str | None = None) -> pd.DataFrame:
     """Attach what each run actually simulated (md_run_inventory.csv) to a per-run table.
 
     Adds: label (display name), wt_protein (topology carries the WT protein),
-    genuine (topology carries the folder's own mutation), used (run long enough).
+    variant_run (topology carries the folder's own mutation), used (run long enough).
     """
     inv = pd.read_csv(FIGDATA / "md_run_inventory.csv")
     inv["variant"] = inv["folder"].replace({"C208A": "C212A"})
@@ -195,7 +195,7 @@ def with_audit(df: pd.DataFrame, ns_col: str | None = None) -> pd.DataFrame:
     assert out["protein"].notna().all(), "run missing from md_run_inventory.csv"
     out["label"] = out["variant"].replace(MD_NAME)
     out["wt_protein"] = out["protein"] == "WT"
-    out["genuine"] = ~out["wt_protein"]
+    out["variant_run"] = ~out["wt_protein"]
     if ns_col == "ns":
         out["used"] = out["ns"] >= 180
     elif ns_col == "n_frames":
@@ -408,17 +408,18 @@ def protein_class(protein: str) -> str:
 def fig_md_sampling(runs: pd.DataFrame) -> None:
     rows = S.DISPLAY_ORDER
     used = runs[runs["used"]]
-    genuine = used[used["genuine"] & (used["label"] != "WT")]
+    variant_runs = used[used["variant_run"] & (used["label"] != "WT")]
     wt_set = used[used["wt_protein"]]
-    misfiled = wt_set[wt_set["label"] != "WT"]
+    wt_in_variant_folders = wt_set[wt_set["label"] != "WT"]
     fig, axes = plt.subplots(1, 4, figsize=(8.6, 4.9), sharey=True)
     fig.subplots_adjust(left=0.085, right=0.915, top=S.top(fig, 1.62), bottom=0.62 / 4.9,
                         wspace=0.1)
-    S.header(fig, "Every Anvil run simulated the wild type",
-             f"Bar color = the protein actually in each run's topology, whatever its folder "
-             f"says. {len(genuine)} complete runs carry their\nvariant; {len(misfiled)} complete "
-             f"runs in variant folders are wild type and join the {len(wt_set) - len(misfiled)} "
-             f"real wild-type runs as a {len(wt_set)}-run wild-type set.")
+    S.header(fig, "Expanse runs carry each variant; Anvil runs test the wild type",
+             f"Bar color = the protein in each run's topology. The Anvil job script resolved "
+             f"every input to the wild-type structure, so its\n{len(wt_in_variant_folders)} "
+             f"complete runs in variant folders join the {len(wt_set) - len(wt_in_variant_folders)} "
+             f"WT-folder runs as a {len(wt_set)}-run wild-type test; {len(variant_runs)} complete "
+             f"runs carry their variant.")
     legend(fig, class_items(["WT", "deleterious", "neutral", "zn_ctrl"])
            + [(S.AXIS, "s", "stopped early (< 180 ns)")], top_in=1.0)
     ypos = {v: len(rows) - 1 - i for i, v in enumerate(rows)}
@@ -449,7 +450,7 @@ def fig_md_sampling(runs: pd.DataFrame) -> None:
     axes[0].set_ylim(-0.6, len(rows) - 0.4)
     fig.text(0.5, 0.025, "analyzed production time per run (ns)", ha="center", fontsize=9,
              color=S.INK2)
-    n_gen = genuine.groupby("label").size()
+    n_gen = variant_runs.groupby("label").size()
     for v in rows:
         n = len(wt_set) if v == "WT" else n_gen.get(v, 0)
         axes[-1].text(1.07, ypos[v], f"{n}", transform=axes[-1].get_yaxis_transform(),
@@ -465,8 +466,102 @@ def fig_md_sampling(runs: pd.DataFrame) -> None:
           floatfmt=".0f")
 
 
+def fig_wt_consistency(t156: pd.DataFrame, stack: pd.DataFrame) -> None:
+    """Figure M2: do independent runs of the same wild-type complex agree?"""
+    wt = t156[t156["used"] & t156["wt_protein"]]
+    st = stack[stack["used"] & stack["wt_protein"]]
+    m = with_audit(pd.read_csv(MDA / "multi_replicate_all_metrics.csv"))
+    mw = m[m["wt_protein"]]
+    halves_gap = (wt["f156_1sthalf"] - wt["f156_2ndhalf"]).abs()
+    n_anvil = int((wt["source"] != "expanse_orig").sum())
+
+    def mark(r):
+        expanse = r["source"] == "expanse_orig"
+        return dict(marker="^" if expanse else "s", s=46 if expanse else 28,
+                    color=S.INK if expanse else S.WT, alpha=1 if expanse else 0.75)
+
+    fig = plt.figure(figsize=(8.6, 4.7))
+    gs = fig.add_gridspec(1, 3, width_ratios=[1, 1, 1.05], left=0.075, right=0.985,
+                          top=S.top(fig, 1.6), bottom=0.62 / 4.7, wspace=0.45)
+    S.header(fig, "Independent wild-type runs do not agree with one another",
+             f"{len(wt)} complete 200 ns runs of the same wild-type complex ({n_anvil} on Anvil, "
+             f"{len(wt) - n_anvil} on Expanse). The two halves of a run mostly agree,\nbut "
+             f"separate runs settle at different levels, and stacking switches fully on or off.")
+    legend(fig, [(S.WT, "s", "Anvil run"), (S.INK, "^", "Expanse run")], top_in=1.0)
+
+    ax = fig.add_subplot(gs[0])
+    lim = (0.25, 0.8)
+    ax.plot(lim, lim, color=S.AXIS, lw=1, zorder=1)
+    for _, r in wt.iterrows():
+        ax.scatter(r["f156_1sthalf"], r["f156_2ndhalf"], edgecolors=S.SURFACE, linewidths=1,
+                   zorder=3, **mark(r))
+    ax.set_xlim(*lim)
+    ax.set_ylim(*lim)
+    ax.set_xticks([0.3, 0.5, 0.7])
+    ax.set_yticks([0.3, 0.5, 0.7])
+    ax.set_xlabel("first 100 ns", fontsize=8.5)
+    ax.set_ylabel("second 100 ns", fontsize=8.5)
+    ax.text(0.27, 0.785, f"halves of one run\ndiffer by {halves_gap.median():.2f}\n(median)",
+            fontsize=7.4, color=S.INK2, va="top", linespacing=1.3)
+    lo, hi = (round(v + 1e-9, 2) for v in (wt["f156_mean"].min(), wt["f156_mean"].max()))
+    ax.text(0.785, 0.265, f"runs span\n{lo:.2f}–{hi:.2f}",
+            fontsize=7.4, color=S.INK2, ha="right", va="bottom", linespacing=1.3)
+    ax.set_title("a  T156–RNA H-bonds per frame", fontsize=9.6)
+    S.hgrid(ax)
+    S.vgrid(ax)
+
+    ax = fig.add_subplot(gs[1])
+    runs = st.sort_values("aromatic_any").reset_index(drop=True)
+    for i, r in runs.iterrows():
+        ax.plot([i, i], [0, r["aromatic_any"]], color=S.WT, lw=1.1, alpha=0.45, zorder=1)
+        ax.scatter(i, r["aromatic_any"], edgecolors=S.SURFACE, linewidths=1, zorder=3, **mark(r))
+    n_off = int((runs["aromatic_any"] < 0.02).sum())
+    n_on = int((runs["aromatic_any"] > 0.5).sum())
+    ax.text(0, 0.1, f"{n_off} runs\nnever stack", fontsize=7.4, color=S.INK2, va="bottom",
+            linespacing=1.3)
+    ax.text(len(runs) - 1, 0.95, f"{n_on} stack most\nof the time", fontsize=7.4, color=S.INK2,
+            ha="right", va="top", linespacing=1.3)
+    ax.set_ylim(-0.04, 1.0)
+    ax.set_xlim(-0.8, len(runs) - 0.2)
+    ax.set_xticks([])
+    ax.set_xlabel("runs, sorted", fontsize=8.5)
+    ax.set_ylabel("fraction of frames stacked", fontsize=8.5)
+    ax.set_title("b  Aromatic stacking per run", fontsize=9.6)
+    S.hgrid(ax)
+
+    ax = fig.add_subplot(gs[2])
+    series = {"Contacts": mw["contacts_last20pct"],
+              "Coulomb energy": mw["coulomb_prot_rna"],
+              "T156 H-bonds": wt["f156_mean"],
+              "Salt bridges": mw["salt_bridges_prot_rna"],
+              "RNA P RMSD": mw["rmsd_rnaP_last20pct"],
+              "Cα RMSD": mw["rmsd_ca_last20pct"],
+              "Stacking": st["aromatic_any"]}
+    cv = pd.Series({k: 100 * v.std() / abs(v.mean()) for k, v in series.items()}).sort_values()
+    for i, (k, v) in enumerate(cv.items()):
+        ax.plot([0, v], [i, i], color=S.INK2, lw=1.3, alpha=0.4, solid_capstyle="butt")
+        ax.scatter(v, i, s=34, color=S.INK2, edgecolors=S.SURFACE, lw=1.1, zorder=3)
+        ax.text(v + 4, i, f"{v:.0f}%", va="center", fontsize=7.8, color=S.INK)
+    ax.set_yticks(range(len(cv)), cv.index, fontsize=8)
+    ax.set_xlim(0, cv.max() * 1.25)
+    ax.set_xlabel("spread across runs\n(SD as % of the mean)", fontsize=8.5)
+    ax.set_title("c  Run-to-run variation", fontsize=9.6)
+    strip_y(ax)
+    S.vgrid(ax)
+    S.save(fig, "figM2_wt_consistency")
+
+    per_run = wt[["source", "label", "f156_1sthalf", "f156_2ndhalf", "f156_mean"]].merge(
+        st[["source", "label", "aromatic_any"]], on=["source", "label"])
+    table("Wild-type test runs: T156 halves and stacking per run",
+          per_run.rename(columns={"label": "folder"}))
+    n_needed = int(np.ceil((1.96 * wt["f156_mean"].std() / 0.05) ** 2))
+    table("Run-to-run variation across the wild-type test runs", pd.DataFrame(
+        {"readout": cv.index, "cv_percent": cv.values}))
+    TABLES.append(f"Runs needed to pin a T156 mean within ±0.05 (95% CI): {n_needed}\n")
+
+
 def screen_table() -> pd.DataFrame:
-    """AUROC for the 32-readout screen: genuine runs only, and as first published."""
+    """AUROC for the 32-readout screen: variant runs only, and pooled by folder as first computed."""
     m = with_audit(pd.read_csv(MDA / "multi_replicate_all_metrics.csv"))
     q = with_audit(pd.read_csv(MDA / "mmgbsa_qscore_all.csv"), "n_frames")
     q = q.rename(columns={"qscore_last20pct": "qscore", "mmgbsa_mean_kJmol": "mmgbsa"})
@@ -482,27 +577,28 @@ def screen_table() -> pd.DataFrame:
             continue
         if feature in signs:
             src = q if feature in ("qscore", "mmgbsa") else m
-            gen = src[src["used"] & src["genuine"]].groupby("label")[feature].mean()
+            gen = src[src["used"] & src["variant_run"]].groupby("label")[feature].mean()
             a_gen, method = auroc(gen.to_dict(), signs[feature]), "MD"
         else:
             a_gen, method = a_pub, "AF3"  # AF3 readouts do not depend on MD runs
         rows.append({"feature": feature, "label": FEATURE_LABELS[feature], "method": method,
-                     "AUROC_genuine": a_gen, "AUROC_published": a_pub})
-    return pd.DataFrame(rows).sort_values("AUROC_genuine").reset_index(drop=True)
+                     "AUROC_variant_runs": a_gen, "AUROC_pooled": a_pub})
+    return pd.DataFrame(rows).sort_values("AUROC_variant_runs").reset_index(drop=True)
 
 
 def fig_auroc_ranking(t: pd.DataFrame) -> None:
     n = len(t)
     crit = critical_auroc(5, 3, 0.05)
-    best_md = t[t["method"] == "MD"]["AUROC_genuine"].max()
+    best_md = t[t["method"] == "MD"]["AUROC_variant_runs"].max()
     fig, ax = plt.subplots(figsize=(8.6, 9.0))
     fig.subplots_adjust(left=0.34, right=0.955, top=S.top(fig, 1.6), bottom=0.6 / 9.0)
-    S.header(fig, "With only genuine runs, no MD readout beats AlphaFold 3",
+    S.header(fig, "On variant runs, no MD readout beats AlphaFold 3",
              f"AUROC for all {n} screened readouts, 5 deleterious vs 3 neutral, direction fixed "
-             f"in advance. Filled = genuine variant runs only\n(1–2 per variant). Open = as first "
-             f"computed, with 16 wild-type runs averaged into the variants. Best MD: {best_md:.3f}.")
-    legend(fig, [(S.MD, "o", "MD readout, genuine runs"), (S.AF3, "o", "AlphaFold 3 confidence"),
-                 (S.SURFACE, "o", "MD, as first computed")], top_in=1.0)
+             f"in advance. Filled = variant runs only (1–2 per\nvariant). Open = the earlier "
+             f"analysis, which pooled runs by folder and so included the wild-type test runs. "
+             f"Best MD: {best_md:.3f}.")
+    legend(fig, [(S.MD, "o", "MD readout, variant runs"), (S.AF3, "o", "AlphaFold 3 confidence"),
+                 (S.SURFACE, "o", "MD, pooled by folder")], top_in=1.0)
     fig.legends[-1].legend_handles[2].set_markeredgecolor(S.MUTED)
     significance_band(ax, crit)
     ax.axvline(0.5, color=S.INK2, lw=0.9, zorder=1)
@@ -510,10 +606,10 @@ def fig_auroc_ranking(t: pd.DataFrame) -> None:
             color=S.MUTED, ha="center", va="bottom")
     for i, r in t.iterrows():
         c = S.AF3 if r["method"] == "AF3" else S.MD
-        a = r["AUROC_genuine"]
-        if r["method"] == "MD" and abs(r["AUROC_published"] - a) > 1e-9:
-            ax.plot([r["AUROC_published"], a], [i, i], color=S.AXIS, lw=1.0, zorder=1)
-            ax.scatter(r["AUROC_published"], i, s=34, facecolors=S.SURFACE,
+        a = r["AUROC_variant_runs"]
+        if r["method"] == "MD" and abs(r["AUROC_pooled"] - a) > 1e-9:
+            ax.plot([r["AUROC_pooled"], a], [i, i], color=S.AXIS, lw=1.0, zorder=1)
+            ax.scatter(r["AUROC_pooled"], i, s=34, facecolors=S.SURFACE,
                        edgecolors=S.MUTED, lw=1.1, zorder=2)
         ax.plot([0.5, a], [i, i], color=c, lw=1.4, alpha=0.55, zorder=2, solid_capstyle="butt")
         ax.scatter(a, i, s=40, color=c, edgecolors=S.SURFACE, lw=1.2, zorder=3)
@@ -532,19 +628,19 @@ def fig_auroc_ranking(t: pd.DataFrame) -> None:
     ax.set_xlabel("AUROC (replicate-averaged, C208A control excluded)")
     strip_y(ax)
     S.vgrid(ax)
-    S.save(fig, "figM2_auroc_ranking")
-    out = t.sort_values("AUROC_genuine", ascending=False)[
-        ["label", "method", "AUROC_genuine", "AUROC_published", "feature"]]
-    table("Screen AUROCs: genuine runs vs as first computed (5 deleterious vs 3 neutral)",
+    S.save(fig, "figM3_auroc_ranking")
+    out = t.sort_values("AUROC_variant_runs", ascending=False)[
+        ["label", "method", "AUROC_variant_runs", "AUROC_pooled", "feature"]]
+    table("Screen AUROCs: variant runs vs pooled by folder (5 deleterious vs 3 neutral)",
           out.rename(columns={"feature": "column in analysis CSVs"}))
 
 
 def noise_panel(ax, runs: pd.DataFrame, col: str, sign: int, title: str, xlabel: str,
                 xlim: tuple[float, float]) -> tuple[float, float]:
-    """One panel of figure M3: the wild-type run set on top, genuine variant runs below."""
+    """One panel of figure M4: the wild-type test runs on top, variant runs below."""
     used = runs[runs["used"]]
     wt = used.loc[used["wt_protein"], col].to_numpy()
-    gen = used[used["genuine"] & (used["label"] != "WT")]
+    gen = used[used["variant_run"] & (used["label"] != "WT")]
     order = [v for v in S.DISPLAY_ORDER if v != "WT"]
     ypos = {v: len(order) - 1 - i for i, v in enumerate(order)}
     top = len(order) + 0.6
@@ -587,40 +683,40 @@ def fig_md_vs_wt_noise(t156: pd.DataFrame, stack: pd.DataFrame) -> dict:
     fig.subplots_adjust(left=0.135, right=0.985, top=S.top(fig, 1.95), bottom=0.6 / 5.3,
                         wspace=0.42)
     S.header(fig, "Variant runs against the wild-type noise floor",
-             "One small dot per genuine 200 ns run, large dot = variant mean. Gray squares = "
-             "the wild-type runs; the wash spans their range.\nWild-type-noise p: how often "
+             "One small dot per variant run, large dot = variant mean. Gray squares = the "
+             "wild-type test runs; the wash spans their range.\nWild-type-noise p: how often "
              "wild-type runs, dealt out as fake variants with the same run counts, rank as well.")
     legend(fig, class_items(["WT", "deleterious", "neutral", "zn_ctrl"]), top_in=1.0)
     a1, p1 = noise_panel(axes[0], t156, "f156_mean", -1, "a  T156–RNA hydrogen bonds",
                          "H-bonds per frame (1 ns sampling)", (0.33, 0.75))
     a2, p2 = noise_panel(axes[1], stack, "aromatic_any", -1, "b  Aromatic stacking on a base",
                          "fraction of frames with a ring stacked", (-0.04, 1.0))
-    S.save(fig, "figM3_wt_noise")
+    S.save(fig, "figM4_wt_noise")
     rows = []
     for name, runs, col in [("T156 H-bonds", t156, "f156_mean"),
                             ("Aromatic stacking (any ring)", stack, "aromatic_any")]:
         used = runs[runs["used"]]
         for v in [v for v in S.DISPLAY_ORDER if v != "WT"]:
-            vals = used.loc[used["genuine"] & (used["label"] == v), col]
+            vals = used.loc[used["variant_run"] & (used["label"] == v), col]
             rows.append({"readout": name, "variant": v, "class": S.VARIANT_CLASS[v],
-                         "genuine_runs": len(vals), "mean": vals.mean()})
+                         "variant_runs": len(vals), "mean": vals.mean()})
         wt = used.loc[used["wt_protein"], col]
         rows.append({"readout": name, "variant": "wild-type set", "class": "WT",
-                     "genuine_runs": len(wt), "mean": wt.mean()})
-    table("Per-variant means on genuine runs, and the wild-type set", pd.DataFrame(rows))
+                     "variant_runs": len(wt), "mean": wt.mean()})
+    table("Per-variant means on variant runs, and the wild-type test set", pd.DataFrame(rows))
     return {"t156": (a1, p1), "stacking": (a2, p2)}
 
 
 def stacking_table(stack: pd.DataFrame) -> pd.DataFrame:
     used = stack[stack["used"]]
-    gen = used[used["genuine"]].groupby("label")[STACKING].mean()
+    gen = used[used["variant_run"]].groupby("label")[STACKING].mean()
     allr = used.groupby("label")[STACKING].mean()
-    t = pd.DataFrame([{"readout": c, "AUROC_genuine": auroc(gen[c].to_dict(), -1),
-                       "AUROC_published": auroc(allr[c].to_dict(), -1)} for c in STACKING])
-    t["exact_p_genuine"] = t["AUROC_genuine"].map(exact_p)
+    t = pd.DataFrame([{"readout": c, "AUROC_variant_runs": auroc(gen[c].to_dict(), -1),
+                       "AUROC_pooled": auroc(allr[c].to_dict(), -1)} for c in STACKING])
+    t["exact_p_variant_runs"] = t["AUROC_variant_runs"].map(exact_p)
     t["wt_stacked_runs"] = [f"{(used.loc[used['wt_protein'], c] > 0.5).sum()}"
                             f"/{used['wt_protein'].sum()}" for c in STACKING]
-    table("Aromatic stacking readouts (13): genuine runs vs as first computed", t)
+    table("Aromatic stacking readouts (13): variant runs vs pooled by folder", t)
     return t
 
 
@@ -712,14 +808,14 @@ def fig_n8_ceiling(af3_iptm: float, md_best: float) -> tuple[int, int]:
 
 
 def fig_forking_paths(af3: pd.DataFrame, t156: pd.DataFrame, screen: pd.DataFrame) -> None:
-    def window(n_ns: str) -> float:  # the expanse_orig runs (genuine), resSeq 6 = T156
+    def window(n_ns: str) -> float:  # the expanse_orig runs (variant runs), resSeq 6 = T156
         h = pd.read_csv(MDA / f"hbonds_per_residue_common{n_ns}.csv", index_col=0)
         return auroc(h.loc[6].to_dict(), -1)
 
-    used = t156[t156["used"] & t156["genuine"]]
+    used = t156[t156["used"] & t156["variant_run"]]
     first_run = used[used["source"] == "expanse_orig"].groupby("label")["f156_mean"].mean()
     pooled = used.groupby("label")["f156_mean"].mean()
-    in_screen = screen.set_index("feature").loc["hbond_RNA_F156", "AUROC_genuine"]
+    in_screen = screen.set_index("feature").loc["hbond_RNA_F156", "AUROC_variant_runs"]
     top = af3[af3["model"] == 0].groupby("variant").mean(numeric_only=True)
     allm = af3.groupby("variant").mean(numeric_only=True)
     paths = [
@@ -740,7 +836,7 @@ def fig_forking_paths(af3: pd.DataFrame, t156: pd.DataFrame, screen: pd.DataFram
     fig, ax = plt.subplots(figsize=(8.6, 4.9))
     fig.subplots_adjust(left=0.43, right=0.96, top=S.top(fig, 1.5), bottom=0.62 / 4.9)
     S.header(fig, "Reasonable analysis choices move the answer more than biology does",
-             "Same eight labeled variants and genuine runs only. Both values that look "
+             "Same eight labeled variants, variant runs only. Both values that look "
              "significant rest on a fragile choice:\na 139 ns window, or the confidence of "
              "the floppy C-terminal residue.")
     legend(fig, [(S.MD, "o", "MD, T156–RNA H-bonds"), (S.AF3, "o", "AlphaFold 3 confidence")],
@@ -765,7 +861,7 @@ def fig_forking_paths(af3: pd.DataFrame, t156: pd.DataFrame, screen: pd.DataFram
     ax.set_xlabel("AUROC, 5 deleterious vs 3 neutral")
     S.vgrid(ax)
     S.save(fig, "figC2_forking_paths")
-    table("AUROC under alternative analysis choices (genuine runs)",
+    table("AUROC under alternative analysis choices (variant runs)",
           pd.DataFrame(paths, columns=["method", "analysis", "AUROC"]))
 
 
@@ -775,7 +871,7 @@ def main() -> None:
     t156 = load_t156_runs()
     stack = load_stacking_runs()
     used = t156[t156["used"]]
-    assert used["wt_protein"].sum() == 19 and (used["genuine"] & (used["label"] != "WT")).sum() == 14
+    assert used["wt_protein"].sum() == 19 and (used["variant_run"] & (used["label"] != "WT")).sum() == 14
     af3_iptm = auroc(af3.groupby("variant")["pair_ipTM_protein_rna"].mean().to_dict(), -1)
     assert abs(af3_iptm - 11 / 15) < 1e-9
 
@@ -783,21 +879,22 @@ def main() -> None:
     fig_af3_confidence(af3)
     fig_af3_rna_control(af3)
     fig_md_sampling(t156)
+    fig_wt_consistency(t156, stack)
     screen = screen_table()
     fig_auroc_ranking(screen)
     noise = fig_md_vs_wt_noise(t156, stack)
     st = stacking_table(stack)
-    md_best = st["AUROC_genuine"].max()
+    md_best = st["AUROC_variant_runs"].max()
     assert abs(noise["t156"][0] - 4 / 15) < 1e-9 and abs(md_best - 14 / 15) < 1e-9
     need, need_u = fig_n8_ceiling(af3_iptm, md_best)
     fig_forking_paths(af3, t156, screen)
     (FIGDATA / "tables.md").write_text(
         "# Numbers behind the figures\n\nGenerated by figures/src/make_figures.py.\n\n"
         + "\n".join(TABLES))
-    print(f"AF3 pair-ipTM {af3_iptm:.3f}; T156 genuine {noise['t156'][0]:.3f} "
-          f"(WT-noise p {noise['t156'][1]:.2f}); stacking genuine {noise['stacking'][0]:.3f} "
+    print(f"AF3 pair-ipTM {af3_iptm:.3f}; T156 variant runs {noise['t156'][0]:.3f} "
+          f"(WT-noise p {noise['t156'][1]:.2f}); stacking variant runs {noise['stacking'][0]:.3f} "
           f"(WT-noise p {noise['stacking'][1]:.3f}); best screen MD "
-          f"{screen[screen['method'] == 'MD']['AUROC_genuine'].max():.3f}; variants needed for "
+          f"{screen[screen['method'] == 'MD']['AUROC_variant_runs'].max():.3f}; variants needed for "
           f"AUROC 0.80: {need_u} uncorrected, {need} after Bonferroni({N_FEATURES_SCREENED})")
 
 
