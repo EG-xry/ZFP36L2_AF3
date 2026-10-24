@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 572" width="1600" height="572" font-family="Arial, Helvetica, sans-serif">
+  <title>ZFP36L2 construct 151-220: zinc fingers, motifs and variant sites</title>
+  <desc>Figure A1 of the ZFP36L2_AF3 write-up. Hand-editable: residues, motifs, Zn coordination and variant sites are separate named groups.</desc>
+  <rect id="background" width="1600" height="572" rx="24" fill="#ffffff"/>
+  <g id="header">
+    <text x="48.0" y="62.0" font-size="28" fill="#0b0b0b" font-weight="700">The construct: 70 residues, two CCCH zinc fingers</text>
+    <text x="48" y="96" font-size="17" fill="#52514e">ZFP36L2 residues 151–220 (NP_008818.3), submitted to AlphaFold 3 with the ARE 5′-UUAUUUAUU-3′ and two Zn<tspan dy="-6" font-size="11">2+</tspan><tspan dy="6">. Every variant is a single substitution in this window.</tspan></text>
+  </g>
+  <g id="legend">
+    <circle cx="55" cy="138" r="7" fill="#eb6834"/>
+    <text x="70.0" y="143.0" font-size="14" fill="#52514e">Deleterious (EMSA)</text>
+    <circle cx="256.79999999999995" cy="138" r="7" fill="#2a78d6"/>
+    <text x="271.8" y="143.0" font-size="14" fill="#52514e">Neutral (EMSA)</text>
+    <rect x="420.69999999999993" y="132.5" width="11" height="11" fill="#898781" transform="rotate(45 426.19999999999993 138)"/>
+    <text x="441.2" y="143.0" font-size="14" fill="#52514e">Zn-knockout control</text>
+  </g>
+  <g id="ruler">
+    <text x="58.0" y="190.0" font-size="12" fill="#898781" text-anchor="middle">151</text>
+    <line x1="58.0" y1="196" x2="58.0" y2="202" stroke="#c3c2b7" stroke-width="1.2"/>
+    <text x="251.5" y="190.0" font-size="12" fill="#898781" text-anchor="middle">160</text>
+    <line x1="251.5" y1="196" x2="251.5" y2="202" stroke="#c3c2b7" stroke-width="1.2"/>
+    <text x="466.5" y="190.0" font-size="12" fill="#898781" text-anchor="middle">170</text>
+    <line x1="466.5" y1="196" x2="466.5" y2="202" stroke="#c3c2b7" stroke-width="1.2"/>
+    <text x="681.5" y="190.0" font-size="12" fill="#898781" text-anchor="middle">180</text>
+    <line x1="681.5" y1="196" x2="681.5" y2="202" stroke="#c3c2b7" stroke-width="1.2"/>
+    <text x="896.5" y="190.0" font-size="12" fill="#898781" text-anchor="middle">190</text>
+    <line x1="896.5" y1="196" x2="896.5" y2="202" stroke="#c3c2b7" stroke-width="1.2"/>
+    <text x="1111.5" y="190.0" font-size="12" fill="#898781" text-anchor="middle">200</text>
+    <line x1="1111.5" y1="196" x2="1111.5" y2="202" stroke="#c3c2b7" stroke-width="1.2"/>
+    <text x="1326.5" y="190.0" font-size="12" fill="#898781" text-anchor="middle">210</text>
+    <line x1="1326.5" y1="196" x2="1326.5" y2="202" stroke="#c3c2b7" stroke-width="1.2"/>
+    <text x="1541.5" y="190.0" font-size="12" fill="#898781" text-anchor="middle">220</text>
+    <line x1="1541.5" y1="196" x2="1541.5" y2="202" stroke="#c3c2b7" stroke-width="1.2"/>
+  </g>
+  <g id="variant-sites">
+    <g id="site-154">
+      <line x1="122.5" y1="324" x2="122.5" y2="272.0" stroke="#c3c2b7" stroke-width="1.6"/>
+      <circle cx="122.5" cy="272.0" r="8" fill="#eb6834" stroke="#ffffff" stroke-width="2"/>
+      <text x="108.5" y="277.0" font-size="14.5" fill="#0b0b0b" text-anchor="end">Y154H</text>
+    </g>
+    <g id="site-160">
+      <line x1="251.5" y1="324" x2="251.5" y2="272.0" stroke="#c3c2b7" stroke-width="1.6"/>
+      <circle cx="251.5" cy="272.0" r="8" fill="#eb6834" stroke="#ffffff" stroke-width="2"/>
+      <text x="265.5" y="277.0" font-size="14.5" fill="#0b0b0b" text-anchor="start">R160W</text>
+    </g>
+    <g id="site-184">
+      <line x1="767.5" y1="324" x2="767.5" y2="272.0" stroke="#c3c2b7" stroke-width="1.6"/>
+      <circle cx="767.5" cy="272.0" r="8" fill="#eb6834" stroke="#ffffff" stroke-width="2"/>
+      <text x="753.5" y="277.0" font-size="14.5" fill="#0b0b0b" text-anchor="end">R184C</text>
+    </g>
+    <g id="site-185">
+      <line x1="789.0" y1="324" x2="789.0" y2="222.0" stroke="#c3c2b7" stroke-width="1.6"/>
+      <circle cx="789.0" cy="222.0" r="8" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+      <text x="803.0" y="227.0" font-size="14.5" fill="#0b0b0b" text-anchor="start">S185N</text>
+    </g>
+    <g id="site-187">
+      <line x1="832.0" y1="324" x2="832.0" y2="272.0" stroke="#c3c2b7" stroke-width="1.6"/>
+      <circle cx="832.0" cy="272.0" r="8" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+      <text x="846.0" y="277.0" font-size="14.5" fill="#0b0b0b" text-anchor="start">T187S</text>
+    </g>
+    <g id="site-204">
+      <line x1="1197.5" y1="324" x2="1197.5" y2="272.0" stroke="#c3c2b7" stroke-width="1.6"/>
+      <circle cx="1197.5" cy="272.0" r="8" fill="#eb6834" stroke="#ffffff" stroke-width="2"/>
+      <text x="1183.5" y="277.0" font-size="14.5" fill="#0b0b0b" text-anchor="end">G204D</text>
+    </g>
+    <g id="site-206">
+      <line x1="1240.5" y1="324" x2="1240.5" y2="272.0" stroke="#c3c2b7" stroke-width="1.6"/>
+      <circle cx="1240.5" cy="272.0" r="8" fill="#eb6834" stroke="#ffffff" stroke-width="2"/>
+      <text x="1254.5" y="277.0" font-size="14.5" fill="#0b0b0b" text-anchor="start">C206F</text>
+    </g>
+    <g id="site-212">
+      <line x1="1369.5" y1="324" x2="1369.5" y2="222.0" stroke="#c3c2b7" stroke-width="1.6"/>
+      <rect x="1363.0" y="215.5" width="13" height="13" fill="#898781" stroke="#ffffff" stroke-width="2" transform="rotate(45 1369.5 222.0)"/>
+      <text x="1383.5" y="227.0" font-size="14.5" fill="#0b0b0b" text-anchor="start">C208A†</text>
+    </g>
+    <g id="site-219">
+      <line x1="1520.0" y1="324" x2="1520.0" y2="272.0" stroke="#c3c2b7" stroke-width="1.6"/>
+      <circle cx="1520.0" cy="272.0" r="8" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+      <text x="1506.0" y="277.0" font-size="14.5" fill="#0b0b0b" text-anchor="end">D210E†</text>
+    </g>
+  </g>
+  <g id="sequence-track">
+    <rect x="48.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="58.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">S</text>
+    <rect x="69.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="79.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">T</text>
+    <rect x="91.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="101.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">R</text>
+    <rect x="112.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="122.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">Y</text>
+    <rect x="134.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="144.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">K</text>
+    <rect x="155.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="165.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">T</text>
+    <rect x="177.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="187.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">E</text>
+    <rect x="198.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="208.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">L</text>
+    <rect x="220.0" y="326" width="20" height="34" rx="4" fill="#52514e"/>
+    <text x="230.0" y="348.5" font-size="14" fill="#ffffff" font-weight="700" text-anchor="middle">C</text>
+    <rect x="241.5" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="251.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">R</text>
+    <rect x="263.0" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="273.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">P</text>
+    <rect x="284.5" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="294.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">F</text>
+    <rect x="306.0" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="316.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">E</text>
+    <rect x="327.5" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="337.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">E</text>
+    <rect x="349.0" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="359.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">S</text>
+    <rect x="370.5" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="380.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">G</text>
+    <rect x="392.0" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="402.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">T</text>
+    <rect x="413.5" y="326" width="20" height="34" rx="4" fill="#52514e"/>
+    <text x="423.5" y="348.5" font-size="14" fill="#ffffff" font-weight="700" text-anchor="middle">C</text>
+    <rect x="435.0" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="445.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">K</text>
+    <rect x="456.5" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="466.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">Y</text>
+    <rect x="478.0" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="488.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">G</text>
+    <rect x="499.5" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="509.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">E</text>
+    <rect x="521.0" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="531.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">K</text>
+    <rect x="542.5" y="326" width="20" height="34" rx="4" fill="#52514e"/>
+    <text x="552.5" y="348.5" font-size="14" fill="#ffffff" font-weight="700" text-anchor="middle">C</text>
+    <rect x="564.0" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="574.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">Q</text>
+    <rect x="585.5" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="595.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">F</text>
+    <rect x="607.0" y="326" width="20" height="34" rx="4" fill="#e3e9f0"/>
+    <text x="617.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">A</text>
+    <rect x="628.5" y="326" width="20" height="34" rx="4" fill="#52514e"/>
+    <text x="638.5" y="348.5" font-size="14" fill="#ffffff" font-weight="700" text-anchor="middle">H</text>
+    <rect x="650.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="660.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">G</text>
+    <rect x="671.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="681.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">F</text>
+    <rect x="693.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="703.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">H</text>
+    <rect x="714.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="724.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">E</text>
+    <rect x="736.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="746.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">L</text>
+    <rect x="757.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="767.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">R</text>
+    <rect x="779.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="789.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">S</text>
+    <rect x="800.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="810.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">L</text>
+    <rect x="822.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="832.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">T</text>
+    <rect x="843.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="853.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">R</text>
+    <rect x="865.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="875.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">H</text>
+    <rect x="886.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="896.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">P</text>
+    <rect x="908.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="918.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">K</text>
+    <rect x="929.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="939.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">Y</text>
+    <rect x="951.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="961.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">K</text>
+    <rect x="972.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="982.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">T</text>
+    <rect x="994.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="1004.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">E</text>
+    <rect x="1015.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="1025.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">L</text>
+    <rect x="1037.0" y="326" width="20" height="34" rx="4" fill="#52514e"/>
+    <text x="1047.0" y="348.5" font-size="14" fill="#ffffff" font-weight="700" text-anchor="middle">C</text>
+    <rect x="1058.5" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1068.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">R</text>
+    <rect x="1080.0" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1090.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">T</text>
+    <rect x="1101.5" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1111.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">F</text>
+    <rect x="1123.0" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1133.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">H</text>
+    <rect x="1144.5" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1154.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">T</text>
+    <rect x="1166.0" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1176.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">I</text>
+    <rect x="1187.5" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1197.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">G</text>
+    <rect x="1209.0" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1219.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">F</text>
+    <rect x="1230.5" y="326" width="20" height="34" rx="4" fill="#52514e"/>
+    <text x="1240.5" y="348.5" font-size="14" fill="#ffffff" font-weight="700" text-anchor="middle">C</text>
+    <rect x="1252.0" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1262.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">P</text>
+    <rect x="1273.5" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1283.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">Y</text>
+    <rect x="1295.0" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1305.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">G</text>
+    <rect x="1316.5" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1326.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">P</text>
+    <rect x="1338.0" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1348.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">R</text>
+    <rect x="1359.5" y="326" width="20" height="34" rx="4" fill="#52514e"/>
+    <text x="1369.5" y="348.5" font-size="14" fill="#ffffff" font-weight="700" text-anchor="middle">C</text>
+    <rect x="1381.0" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1391.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">H</text>
+    <rect x="1402.5" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1412.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">F</text>
+    <rect x="1424.0" y="326" width="20" height="34" rx="4" fill="#efe9df"/>
+    <text x="1434.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">I</text>
+    <rect x="1445.5" y="326" width="20" height="34" rx="4" fill="#52514e"/>
+    <text x="1455.5" y="348.5" font-size="14" fill="#ffffff" font-weight="700" text-anchor="middle">H</text>
+    <rect x="1467.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="1477.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">N</text>
+    <rect x="1488.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="1498.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">A</text>
+    <rect x="1510.0" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="1520.0" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">D</text>
+    <rect x="1531.5" y="326" width="20" height="34" rx="4" fill="#f5f4f0"/>
+    <text x="1541.5" y="348.5" font-size="14" fill="#0b0b0b" text-anchor="middle">E</text>
+  </g>
+  <g id="motifs">
+    <rect x="91.0" y="368" width="127.5" height="5" rx="2.5" fill="#52514e"/>
+    <text x="154.8" y="392.0" font-size="13" fill="#52514e" text-anchor="middle">RYKTEL lead-in</text>
+    <rect x="908.0" y="368" width="127.5" height="5" rx="2.5" fill="#52514e"/>
+    <text x="971.8" y="392.0" font-size="13" fill="#52514e" text-anchor="middle">KYKTEL lead-in</text>
+  </g>
+  <g id="zinc-coordination">
+    <line x1="230.0" y1="362" x2="230.0" y2="414" stroke="#52514e" stroke-width="1.4"/>
+    <line x1="423.5" y1="362" x2="423.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
+    <line x1="552.5" y1="362" x2="552.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
+    <line x1="638.5" y1="362" x2="638.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
+    <line x1="230.0" y1="414" x2="638.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
+    <circle cx="488.0" cy="414" r="10" fill="#dfe2e6" stroke="#8e8d88" stroke-width="1.4"/>
+    <text x="488.0" y="442" font-size="13" fill="#52514e" text-anchor="middle">Zn<tspan dy="-5" font-size="9">2+</tspan></text>
+    <text x="434.2" y="472.0" font-size="15" fill="#0b0b0b" font-weight="700" text-anchor="middle">Zinc finger 1  (159–178)</text>
+    <text x="434.2" y="492.0" font-size="12.5" fill="#898781" text-anchor="middle">C159–X8–C168–X5–C174–X3–H178</text>
+    <line x1="1047.0" y1="362" x2="1047.0" y2="414" stroke="#52514e" stroke-width="1.4"/>
+    <line x1="1240.5" y1="362" x2="1240.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
+    <line x1="1369.5" y1="362" x2="1369.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
+    <line x1="1455.5" y1="362" x2="1455.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
+    <line x1="1047.0" y1="414" x2="1455.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
+    <circle cx="1305.0" cy="414" r="10" fill="#dfe2e6" stroke="#8e8d88" stroke-width="1.4"/>
+    <text x="1305.0" y="442" font-size="13" fill="#52514e" text-anchor="middle">Zn<tspan dy="-5" font-size="9">2+</tspan></text>
+    <text x="1251.2" y="472.0" font-size="15" fill="#0b0b0b" font-weight="700" text-anchor="middle">Zinc finger 2  (197–216)</text>
+    <text x="1251.2" y="492.0" font-size="12.5" fill="#898781" text-anchor="middle">C197–X8–C206–X5–C212–X3–H216</text>
+    <text x="842.8" y="472.0" font-size="14" fill="#898781" text-anchor="middle">linker</text>
+  </g>
+  <g id="footnote">
+    <text x="48.0" y="546.0" font-size="13" fill="#898781">† Names follow Akçeşme et al. 2025. In this construct numbering the AF3 jobs mutate C212 (a finger-2 zinc ligand, used as the knockout control) and D219 (the C-terminal tail).</text>
+  </g>
+</svg>

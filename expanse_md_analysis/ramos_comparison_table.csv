@@ -1,0 +1,10 @@
+variant,key_residue,delta_Hbonds_vs_WT,paper_expectation,qualitative_agreement
+Y154H,Y154,0.001,small ↑ or ≈0 (paper reports ↑ intra-protein H-bonds),match
+R160W,R160,-0.218,loss of guanidinium → expected ↓ at R160 with RNA,match
+R184C,R184,-0.03,from 6 → 3 H-bonds (paper Figure S13C) → strong ↓,differs
+G204D,G204,0.006,small ↓ (paper says 'reduced probability'),differs
+C206F,C206,-0.0,small ↓ (paper says 'reduced probability'),differs
+C212A,C212,0.001,Zn coordination loss in ZF2 (this run; mislabeled as C208A),differs
+D210E,D210,0.0,neutral – expected ≈0 (note: real mutation is D219E),match
+S185N,S185,-0.003,neutral – expected ≈0,match
+T187S,T187,-0.009,neutral – expected ≈0,match
