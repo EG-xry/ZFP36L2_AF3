@@ -1,0 +1,6 @@
+feature,AUROC,origin
+coulomb_prot_rna_screened,0.833,MD-energy
+salt_bridges_prot_rna,0.611,MD-energy
+interface_atom_count_5A,0.167,MD-energy
+binding_residue_rmsf_A,0.167,MD-energy
+mmgbsa_int_kJmol,0.444,MD-energy

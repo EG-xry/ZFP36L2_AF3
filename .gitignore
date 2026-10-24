@@ -47,3 +47,33 @@ dist/
 *.tar
 *.tar.gz
 *.zip
+
+# Personal and AI-assistant working files (kept local)
+ME.md
+STYLES.md
+CLAUDE.md
+AGENTS.md
+PAPER1_CHAPTER_PLAN.md
+MD_ARCHITECTURE_AND_WORKFLOW.md
+ANVIL_Gettingstarted.txt
+ANVIL_JobSubmission.txt
+
+# Separate projects and third-party documents (not part of this write-up)
+Joshua_Project/
+AlphaFold-MetaInference-Tutorial-main/
+AlphaFold/*.pdf
+
+# Raw MD outputs; per-trajectory summaries live in expanse_md_analysis/
+anvil_md_results/
+expanse_md_results/
+expanse_md_results_rep2/
+openmm/
+
+# Copies of the Akçeşme et al. paper (linked by DOI instead)
+attachments/Joshua_Project_Silvia.pdf
+MD_GCP_Pipeline_Consolidated/inputs/reference_paper/*.pdf
+
+# anvil_md troubleshooting notes and unredacted originals (kept local)
+anvil_md/*.md
+!anvil_md/ANVIL_README.md
+.private/
