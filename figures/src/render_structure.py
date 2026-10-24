@@ -3,7 +3,7 @@ Ray-traced view of the WT AlphaFold 3 complex that seeded the MD runs.
 
 Run from the repo root with PyMOL's bundled Python:
 
-    /Applications/PyMOL.app/Contents/MacOS/PyMOL -cq figures/src/render_structure.py
+    /Applications/PyMOL.app/Contents/MacOS/PyMOL -cq figures/src/render_structure.py -- --turn-x 90
 
 Writes figures/data/structure_render.png (no labels) and
 figures/data/structure_anchors.csv (pixel position of every residue that
@@ -21,7 +21,8 @@ ROOT = Path.cwd()
 PDB = ROOT / "anvil_md" / "best_models" / "WT_best_model.pdb"
 OUT_PNG = ROOT / "figures" / "data" / "structure_render.png"
 OUT_ANCHORS = ROOT / "figures" / "data" / "structure_anchors.csv"
-WIDTH, HEIGHT = 2400, 1500
+# Render at twice the composite's 2400 x 1500 layout grid so the crop is never upsampled.
+WIDTH, HEIGHT = 4800, 3000
 
 # Palette (figures/src/style.py)
 COLORS = {
@@ -50,6 +51,8 @@ def style() -> None:
 
     cmd.hide("everything")
     cmd.bg_color("white")
+    # Opaque: resampling transparent edges in make_figures.py leaves a dotted halo.
+    cmd.set("ray_opaque_background", 1)
     cmd.set("cartoon_fancy_helices", 1)
     cmd.set("cartoon_transparency", 0.0)
     cmd.set("cartoon_loop_radius", 0.34)

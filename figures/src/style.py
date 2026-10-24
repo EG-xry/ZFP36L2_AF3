@@ -136,11 +136,11 @@ def header(fig, title: str, subtitle: str | None = None) -> None:
                  fontsize=10, color=INK2, linespacing=1.4)
 
 
-def save(fig, name: str) -> None:
-    """Write figures/<name>.svg (editable text) and figures/<name>.png (2x)."""
+def save(fig, name: str, dpi: int = 220) -> None:
+    """Write figures/<name>.svg (editable text) and figures/<name>.png."""
     svg_path = FIG_DIR / f"{name}.svg"
     png_path = FIG_DIR / f"{name}.png"
-    fig.savefig(svg_path, metadata={"Date": None})
-    fig.savefig(png_path, dpi=220)
+    fig.savefig(svg_path, dpi=dpi, metadata={"Date": None})  # dpi sets embedded image resolution
+    fig.savefig(png_path, dpi=dpi)
     plt.close(fig)
     print(f"  wrote {svg_path.name} + {png_path.name}")

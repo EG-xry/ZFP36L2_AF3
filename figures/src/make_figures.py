@@ -218,7 +218,7 @@ def load_stacking_runs() -> pd.DataFrame:
 # ══════════════════════════════════════════════════════════════════════════
 #  Structure (README)
 # ══════════════════════════════════════════════════════════════════════════
-# Label position (render pixels) for each anchor written by render_structure.py.
+# Label positions on a 2400 x 1500 layout grid; fig_structure scales them to the render.
 STRUCTURE_LABELS = {
     "D210E": (735, 404, "right", "D210E†"), "T187S": (1085, 318, "center", None),
     "S185N": (1255, 318, "center", None), "R184C": (1425, 318, "center", None),
@@ -231,35 +231,36 @@ STRUCTURE_LABELS = {
 def fig_structure() -> None:
     img = plt.imread(FIGDATA / "structure_render.png")
     anchors = pd.read_csv(FIGDATA / "structure_anchors.csv").set_index("label")
+    k = img.shape[1] / 2400  # render pixels per layout-grid pixel
     fig = plt.figure(figsize=(8.6, 5.6))
     ax = fig.add_axes([0.0, 0.035, 1.0, S.top(fig, 1.0) - 0.035])
     S.header(fig, "The AlphaFold 3 starting structure",
              "ZFP36L2 tandem zinc fingers (151–220) on the ARE 5′-UUAUUUAUU-3′ with two "
              "Zn$^{2{+}}$. Spheres mark variant sites (Cα).")
     ax.imshow(img, interpolation="lanczos")
-    ax.set_xlim(330, 2080)
-    ax.set_ylim(1150, 250)
+    ax.set_xlim(330 * k, 2080 * k)
+    ax.set_ylim(1150 * k, 250 * k)
     ax.axis("off")
     for key, (lx, ly, ha, text) in STRUCTURE_LABELS.items():
         r = anchors.loc[key]
-        ax.annotate(text or key, xy=(r["x_px"], r["y_px"]), xytext=(lx, ly), ha=ha,
+        ax.annotate(text or key, xy=(r["x_px"], r["y_px"]), xytext=(lx * k, ly * k), ha=ha,
                     va="center", fontsize=8.6, color=S.INK,
                     arrowprops=dict(arrowstyle="-", color=S.MUTED, lw=0.7, shrinkA=3,
                                     shrinkB=17))
     for key, (dx, dy) in {"5'": (-55, 0), "3'": (80, 0)}.items():
         r = anchors.loc[key]
-        ax.text(r["x_px"] + dx, r["y_px"] + dy, key.replace("'", "′"), ha="center",
+        ax.text(r["x_px"] + dx * k, r["y_px"] + dy * k, key.replace("'", "′"), ha="center",
                 va="center", fontsize=9.5, color=S.INK, fontweight="bold")
-    ax.text(1735, 405, "finger 1\n159–178", ha="center", va="center", fontsize=8.6,
+    ax.text(1735 * k, 405 * k, "finger 1\n159–178", ha="center", va="center", fontsize=8.6,
             color=S.INK2, linespacing=1.25)
-    ax.text(620, 560, "finger 2\n197–216", ha="center", va="center", fontsize=8.6,
+    ax.text(620 * k, 560 * k, "finger 2\n197–216", ha="center", va="center", fontsize=8.6,
             color=S.INK2, linespacing=1.25)
-    ax.text(1330, 1100, "RNA", ha="left", va="center", fontsize=8.6, color=S.INK2)
+    ax.text(1330 * k, 1100 * k, "RNA", ha="left", va="center", fontsize=8.6, color=S.INK2)
     legend(fig, class_items(["deleterious", "neutral", "zn_ctrl"])
            + [("#dfe2e6", "o", "Zn$^{2{+}}$")], top_in=0.82)
     fig.text(0.012, 0.012, "† C208A and D210E follow Akçeşme et al. 2025; in the construct "
              "numbering used here they mutate C212 and D219.", fontsize=7.6, color=S.MUTED)
-    S.save(fig, "fig1_structure")
+    S.save(fig, "fig1_structure", dpi=300)
 
 
 # ══════════════════════════════════════════════════════════════════════════
