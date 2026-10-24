@@ -14,8 +14,6 @@
     <text x="271.8" y="143.0" font-size="14" fill="#52514e">Neutral (EMSA)</text>
     <rect x="420.69999999999993" y="132.5" width="11" height="11" fill="#898781" transform="rotate(45 426.19999999999993 138)"/>
     <text x="441.2" y="143.0" font-size="14" fill="#52514e">Zn-knockout control</text>
-    <circle cx="636.0999999999999" cy="138" r="7" fill="#008300"/>
-    <text x="651.1" y="143.0" font-size="14" fill="#52514e">Best MD feature</text>
   </g>
   <g id="ruler">
     <text x="58.0" y="190.0" font-size="12" fill="#898781" text-anchor="middle">151</text>
@@ -40,11 +38,6 @@
       <line x1="122.5" y1="324" x2="122.5" y2="272.0" stroke="#c3c2b7" stroke-width="1.6"/>
       <circle cx="122.5" cy="272.0" r="8" fill="#eb6834" stroke="#ffffff" stroke-width="2"/>
       <text x="108.5" y="277.0" font-size="14.5" fill="#0b0b0b" text-anchor="end">Y154H</text>
-    </g>
-    <g id="site-156">
-      <line x1="165.5" y1="324" x2="165.5" y2="222.0" stroke="#c3c2b7" stroke-width="1.6"/>
-      <circle cx="165.5" cy="222.0" r="8" fill="#008300" stroke="#ffffff" stroke-width="2"/>
-      <text x="179.5" y="227.0" font-size="14.5" fill="#0b0b0b" font-weight="700" text-anchor="start">T156 · best MD feature</text>
     </g>
     <g id="site-160">
       <line x1="251.5" y1="324" x2="251.5" y2="272.0" stroke="#c3c2b7" stroke-width="1.6"/>

@@ -6,7 +6,7 @@
   <g id="header">
     <text x="48" y="46" font-size="12.5" fill="#898781" font-weight="700" letter-spacing="1.6">ZFP36L2 · ALPHAFOLD 3 + MOLECULAR DYNAMICS · PAUSED OCTOBER 2026</text>
     <text x="48" y="90" font-size="31" fill="#0b0b0b" font-weight="700">Can MD on AlphaFold 3 models separate harmful from harmless ZFP36L2 variants?</text>
-    <text x="48" y="124" font-size="17" fill="#52514e">Ten constructs of the ZFP36L2 tandem zinc-finger domain, predicted with AlphaFold 3, simulated with replicated MD, and scored against EMSA labels from Akçeşme et al. 2025.</text>
+    <text x="48" y="124" font-size="17" fill="#52514e">Ten constructs of the ZFP36L2 tandem zinc-finger domain, predicted with AlphaFold 3, simulated with MD, and scored against EMSA labels from Akçeşme et al. 2025.</text>
   </g>
   <g id="pipeline">
     <text x="48" y="174" font-size="12.5" fill="#898781" font-weight="700" letter-spacing="1.6">WHAT I DID</text>
@@ -82,10 +82,10 @@
         <polyline points="692.0,300.3 698.0,291.5 704.0,299.4 710.0,299.9 716.0,299.3 722.0,297.2 728.0,301.3 734.0,303.9 740.0,300.0 746.0,301.7 752.0,303.6 758.0,299.0 764.0,302.5 770.0,303.9 776.0,300.4 782.0,302.2 788.0,302.5 794.0,304.2 800.0,303.7 806.0,302.9 812.0,303.0 818.0,304.5 824.0,303.5 830.0,302.0 836.0,303.6 842.0,304.1 848.0,303.2 854.0,303.9 860.0,304.5 866.0,302.8 872.0,303.5 878.0,303.4 884.0,303.8 890.0,302.9 896.0,304.2 902.0,304.0 908.0,304.9" fill="none" stroke="#008300" stroke-width="2.2" stroke-opacity="0.55" stroke-linejoin="round" stroke-linecap="round"/>
         <polyline points="692.0,295.9 698.0,300.6 704.0,296.7 710.0,300.9 716.0,300.9 722.0,301.5 728.0,306.5 734.0,309.8 740.0,309.6 746.0,310.0 752.0,312.3 758.0,311.4 764.0,313.4 770.0,314.2 776.0,316.0 782.0,315.6 788.0,316.1 794.0,316.7 800.0,316.7 806.0,316.9 812.0,315.5 818.0,316.6 824.0,316.1 830.0,315.8 836.0,316.5 842.0,317.1 848.0,317.0 854.0,316.4 860.0,318.6 866.0,317.9 872.0,317.1 878.0,316.3 884.0,318.7 890.0,318.6 896.0,317.0 902.0,317.8 908.0,319.0" fill="none" stroke="#008300" stroke-width="2.2" stroke-opacity="0.4" stroke-linejoin="round" stroke-linecap="round"/>
       </g>
-      <text x="688" y="378" font-size="19.5" fill="#0b0b0b" font-weight="700">6.5 µs analyzed</text>
-      <text x="688" y="404" font-size="15.5" fill="#52514e">33 of 40 runs × 200 ns</text>
-      <text x="688" y="430" font-size="15.5" fill="#52514e">OpenMM · AMBER14SB + OL3</text>
-      <text x="688" y="456" font-size="15.5" fill="#52514e">Expanse V100 · Anvil A100</text>
+      <text x="688" y="378" font-size="19.5" fill="#0b0b0b" font-weight="700">40 runs, ≤ 200 ns</text>
+      <text x="688" y="404" font-size="15.5" fill="#52514e">14 genuine variant runs</text>
+      <text x="688" y="430" font-size="15.5" fill="#52514e">19 wild type (16 misfiled)</text>
+      <text x="688" y="456" font-size="15.5" fill="#52514e">OpenMM · AMBER14SB + OL3</text>
     </g>
     <path id="arrow-3-4" d="M949.0,328.0 L959.0,337.0 L949.0,346.0" fill="none" stroke="#52514e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
     <g id="stage-4-features">
@@ -108,10 +108,10 @@
         <line x1="1084.0" y1="332.0" x2="1032.0" y2="332.0" stroke="#52514e" stroke-width="2.4" stroke-linecap="butt" stroke-opacity="0.5"/>
         <circle cx="1032.0" cy="332.0" r="4.6" fill="#52514e" stroke="#ffffff" stroke-width="1.4"/>
       </g>
-      <text x="996" y="378" font-size="19.5" fill="#0b0b0b" font-weight="700">32 readouts</text>
+      <text x="996" y="378" font-size="19.5" fill="#0b0b0b" font-weight="700">45 readouts</text>
       <text x="996" y="404" font-size="15.5" fill="#52514e">AF3 confidence (7)</text>
-      <text x="996" y="430" font-size="15.5" fill="#52514e">RNA H-bonds per residue (14)</text>
-      <text x="996" y="456" font-size="15.5" fill="#52514e">RMSD, contacts, energy (11)</text>
+      <text x="996" y="430" font-size="15.5" fill="#52514e">MD contacts, energy (25)</text>
+      <text x="996" y="456" font-size="15.5" fill="#52514e">Aromatic stacking (13)</text>
     </g>
     <path id="arrow-4-5" d="M1257.0,328.0 L1267.0,337.0 L1257.0,346.0" fill="none" stroke="#52514e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
     <g id="stage-5-benchmark">
@@ -120,19 +120,61 @@
       <text x="1316" y="233.5" font-size="15" fill="#ffffff" font-weight="700" text-anchor="middle">5</text>
       <text x="1342" y="234" font-size="19" fill="#0b0b0b" font-weight="700">Benchmark</text>
       <g id="stage-5-benchmark-glyph">
-        <rect x="1479.6" y="270" width="42.4" height="48" fill="#f5f4f0"/>
-        <text x="1500.8" y="283" font-size="11.5" fill="#898781" text-anchor="middle">p &lt; 0.05</text>
-        <line x1="1310.0" y1="306.0" x2="1522.0" y2="306.0" stroke="#c3c2b7" stroke-width="1.4" stroke-linecap="butt"/>
-        <line x1="1310.0" y1="306.0" x2="1310.0" y2="312.0" stroke="#c3c2b7" stroke-width="1.4" stroke-linecap="butt"/>
-        <text x="1310" y="328" font-size="12" fill="#898781" text-anchor="middle">0.5</text>
-        <line x1="1416.0" y1="306.0" x2="1416.0" y2="312.0" stroke="#c3c2b7" stroke-width="1.4" stroke-linecap="butt"/>
-        <text x="1416" y="328" font-size="12" fill="#898781" text-anchor="middle">0.75</text>
-        <line x1="1522.0" y1="306.0" x2="1522.0" y2="312.0" stroke="#c3c2b7" stroke-width="1.4" stroke-linecap="butt"/>
-        <text x="1522" y="328" font-size="12" fill="#898781" text-anchor="middle">1.0</text>
-        <circle cx="1408.8" cy="306.0" r="6.5" fill="#6250d6" stroke="#ffffff" stroke-width="1.8"/>
-        <text x="1408.79" y="292" font-size="12" fill="#52514e" text-anchor="middle">AF3</text>
-        <circle cx="1437.2" cy="306.0" r="6.5" fill="#008300" stroke="#ffffff" stroke-width="1.8"/>
-        <text x="1437.2" y="292" font-size="12" fill="#52514e" text-anchor="middle">MD</text>
+        <rect x="1502.4" y="250" width="21.6" height="58" fill="#f5f4f0"/>
+        <text x="1524" y="246" font-size="11.5" fill="#898781" text-anchor="end">p &lt; 0.05</text>
+        <line x1="1416.0" y1="250.0" x2="1416.0" y2="308.0" stroke="#52514e" stroke-width="1" stroke-linecap="butt"/>
+        <line x1="1308.0" y1="308.0" x2="1524.0" y2="308.0" stroke="#c3c2b7" stroke-width="1.4" stroke-linecap="butt"/>
+        <line x1="1308.0" y1="308.0" x2="1308.0" y2="314.0" stroke="#c3c2b7" stroke-width="1.4" stroke-linecap="butt"/>
+        <text x="1308" y="330" font-size="12" fill="#898781" text-anchor="middle">0.0</text>
+        <line x1="1416.0" y1="308.0" x2="1416.0" y2="314.0" stroke="#c3c2b7" stroke-width="1.4" stroke-linecap="butt"/>
+        <text x="1416" y="330" font-size="12" fill="#898781" text-anchor="middle">0.5</text>
+        <line x1="1524.0" y1="308.0" x2="1524.0" y2="314.0" stroke="#c3c2b7" stroke-width="1.4" stroke-linecap="butt"/>
+        <text x="1524" y="330" font-size="12" fill="#898781" text-anchor="middle">1.0</text>
+        <circle cx="1336.7" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1351.2" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1394.4" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1394.4" cy="298.5" r="2.3" fill="#008300"/>
+        <circle cx="1394.4" cy="294.0" r="2.3" fill="#008300"/>
+        <circle cx="1394.4" cy="289.5" r="2.3" fill="#008300"/>
+        <circle cx="1394.4" cy="285.0" r="2.3" fill="#6250d6"/>
+        <circle cx="1408.9" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1408.9" cy="298.5" r="2.3" fill="#008300"/>
+        <circle cx="1408.9" cy="294.0" r="2.3" fill="#008300"/>
+        <circle cx="1408.9" cy="289.5" r="2.3" fill="#6250d6"/>
+        <circle cx="1416.0" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1416.0" cy="298.5" r="2.3" fill="#008300"/>
+        <circle cx="1416.0" cy="294.0" r="2.3" fill="#008300"/>
+        <circle cx="1416.0" cy="289.5" r="2.3" fill="#008300"/>
+        <circle cx="1416.0" cy="285.0" r="2.3" fill="#008300"/>
+        <circle cx="1416.0" cy="280.5" r="2.3" fill="#008300"/>
+        <circle cx="1416.0" cy="276.0" r="2.3" fill="#008300"/>
+        <circle cx="1416.0" cy="271.5" r="2.3" fill="#008300"/>
+        <circle cx="1416.0" cy="267.0" r="2.3" fill="#008300"/>
+        <circle cx="1416.0" cy="262.5" r="2.3" fill="#008300"/>
+        <circle cx="1416.0" cy="258.0" r="2.3" fill="#008300"/>
+        <circle cx="1423.1" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1423.1" cy="298.5" r="2.3" fill="#008300"/>
+        <circle cx="1423.1" cy="294.0" r="2.3" fill="#008300"/>
+        <circle cx="1423.1" cy="289.5" r="2.3" fill="#6250d6"/>
+        <circle cx="1423.1" cy="285.0" r="2.3" fill="#6250d6"/>
+        <circle cx="1437.6" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1437.6" cy="298.5" r="2.3" fill="#008300"/>
+        <circle cx="1452.1" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1452.1" cy="298.5" r="2.3" fill="#008300"/>
+        <circle cx="1452.1" cy="294.0" r="2.3" fill="#008300"/>
+        <circle cx="1452.1" cy="289.5" r="2.3" fill="#008300"/>
+        <circle cx="1452.1" cy="285.0" r="2.3" fill="#6250d6"/>
+        <circle cx="1452.1" cy="280.5" r="2.3" fill="#6250d6"/>
+        <circle cx="1466.3" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1466.3" cy="298.5" r="2.3" fill="#008300"/>
+        <circle cx="1466.3" cy="294.0" r="2.3" fill="#008300"/>
+        <circle cx="1466.3" cy="289.5" r="2.3" fill="#6250d6"/>
+        <circle cx="1480.8" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1480.8" cy="298.5" r="2.3" fill="#008300"/>
+        <circle cx="1495.3" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1509.5" cy="303.0" r="2.3" fill="#008300"/>
+        <circle cx="1509.5" cy="298.5" r="2.3" fill="#008300"/>
+        <circle cx="1509.5" cy="294.0" r="2.3" fill="#008300"/>
       </g>
       <text x="1304" y="378" font-size="19.5" fill="#0b0b0b" font-weight="700">AUROC vs EMSA</text>
       <text x="1304" y="404" font-size="15.5" fill="#52514e">5 deleterious vs 3 neutral</text>
@@ -176,70 +218,108 @@
       <rect x="430" y="558" width="358" height="250" rx="16" fill="#ffffff" stroke="#e1e0d9" stroke-width="1.5"/>
       <circle cx="460.0" cy="588.0" r="5.5" fill="#008300"/>
       <text x="474" y="592.5" font-size="12" fill="#52514e" font-weight="700" letter-spacing="1.4">MOLECULAR DYNAMICS</text>
-      <text x="454" y="628" font-size="22" fill="#0b0b0b" font-weight="700">One weak MD signal</text>
+      <text x="454" y="628" font-size="22" fill="#0b0b0b" font-weight="700">No robust MD signal</text>
       <g id="finding-2-md-glyph">
-        <circle cx="476.6" cy="679.6" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="504.3" cy="680.5" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="510.2" cy="683.4" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="537.9" cy="679.7" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="544.6" cy="680.1" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="569.0" cy="680.7" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="569.0" cy="677.5" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="590.0" cy="680.1" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="602.6" cy="681.0" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="604.3" cy="682.3" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="606.8" cy="676.8" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="621.1" cy="678.4" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="623.6" cy="676.7" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="657.2" cy="682.5" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="667.3" cy="681.5" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="675.7" cy="676.3" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="684.1" cy="683.9" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="690.8" cy="683.7" r="4.2" fill="#eb6834" fill-opacity="0.7"/>
-        <circle cx="516.9" cy="703.2" r="4.2" fill="#2a78d6" fill-opacity="0.7"/>
-        <circle cx="525.3" cy="702.9" r="4.2" fill="#2a78d6" fill-opacity="0.7"/>
-        <circle cx="560.6" cy="699.3" r="4.2" fill="#2a78d6" fill-opacity="0.7"/>
-        <circle cx="569.8" cy="698.1" r="4.2" fill="#2a78d6" fill-opacity="0.7"/>
-        <circle cx="583.3" cy="702.2" r="4.2" fill="#2a78d6" fill-opacity="0.7"/>
-        <circle cx="602.6" cy="698.5" r="4.2" fill="#2a78d6" fill-opacity="0.7"/>
-        <circle cx="663.1" cy="699.5" r="4.2" fill="#2a78d6" fill-opacity="0.7"/>
-        <circle cx="674.0" cy="699.9" r="4.2" fill="#2a78d6" fill-opacity="0.7"/>
-        <circle cx="707.6" cy="698.2" r="4.2" fill="#2a78d6" fill-opacity="0.7"/>
-        <circle cx="741.2" cy="701.7" r="4.2" fill="#2a78d6" fill-opacity="0.7"/>
-        <line x1="594.9" y1="666.0" x2="594.9" y2="694.0" stroke="#eb6834" stroke-width="2.6" stroke-linecap="round"/>
-        <line x1="614.2" y1="688.0" x2="614.2" y2="716.0" stroke="#2a78d6" stroke-width="2.6" stroke-linecap="round"/>
+        <rect x="747.2" y="676.0" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="583.6" y="676.9" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="647.1" y="679.8" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="530.3" y="676.1" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="579.6" y="676.5" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="660.6" y="677.1" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="472.3" y="673.9" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="536.7" y="676.5" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="504.1" y="677.4" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="611.4" y="678.7" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="591.5" y="673.2" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="559.7" y="674.8" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="566.9" y="673.1" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="573.2" y="678.9" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="591.5" y="677.9" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="722.6" y="672.7" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="551.8" y="680.3" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="659.0" y="680.1" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <rect x="690.8" y="677.6" width="7.2" height="7.2" fill="#52514e" fill-opacity="0.7"/>
+        <circle cx="672.2" cy="702.9" r="4.2" fill="#eb6834" fill-opacity="0.8"/>
+        <circle cx="679.3" cy="699.3" r="4.2" fill="#eb6834" fill-opacity="0.8"/>
+        <circle cx="596.7" cy="698.1" r="4.2" fill="#eb6834" fill-opacity="0.8"/>
+        <circle cx="599.1" cy="702.2" r="4.2" fill="#eb6834" fill-opacity="0.8"/>
+        <circle cx="612.6" cy="698.5" r="4.2" fill="#eb6834" fill-opacity="0.8"/>
+        <circle cx="502.1" cy="699.5" r="4.2" fill="#eb6834" fill-opacity="0.8"/>
+        <circle cx="646.8" cy="699.9" r="4.2" fill="#eb6834" fill-opacity="0.8"/>
+        <circle cx="656.3" cy="698.2" r="4.2" fill="#eb6834" fill-opacity="0.8"/>
+        <circle cx="563.3" cy="701.7" r="4.2" fill="#eb6834" fill-opacity="0.8"/>
+        <circle cx="652.3" cy="701.5" r="4.2" fill="#2a78d6" fill-opacity="0.8"/>
+        <circle cx="522.0" cy="704.7" r="4.2" fill="#2a78d6" fill-opacity="0.8"/>
+        <circle cx="514.1" cy="702.2" r="4.2" fill="#2a78d6" fill-opacity="0.8"/>
+        <circle cx="564.1" cy="703.1" r="4.2" fill="#2a78d6" fill-opacity="0.8"/>
         <line x1="464.0" y1="724.0" x2="758.0" y2="724.0" stroke="#c3c2b7" stroke-width="1.2" stroke-linecap="butt"/>
-        <line x1="506.0" y1="724.0" x2="506.0" y2="729.0" stroke="#c3c2b7" stroke-width="1.2" stroke-linecap="butt"/>
-        <text x="506" y="743" font-size="12" fill="#898781" text-anchor="middle">0.4</text>
-        <line x1="590.0" y1="724.0" x2="590.0" y2="729.0" stroke="#c3c2b7" stroke-width="1.2" stroke-linecap="butt"/>
-        <text x="590" y="743" font-size="12" fill="#898781" text-anchor="middle">0.5</text>
-        <line x1="674.0" y1="724.0" x2="674.0" y2="729.0" stroke="#c3c2b7" stroke-width="1.2" stroke-linecap="butt"/>
-        <text x="674" y="743" font-size="12" fill="#898781" text-anchor="middle">0.6</text>
-        <line x1="758.0" y1="724.0" x2="758.0" y2="729.0" stroke="#c3c2b7" stroke-width="1.2" stroke-linecap="butt"/>
-        <text x="758" y="743" font-size="12" fill="#898781" text-anchor="middle">0.7</text>
-        <text x="464" y="656" font-size="12" fill="#898781">dots = replicates · bars = class means</text>
+        <line x1="503.7" y1="724.0" x2="503.7" y2="729.0" stroke="#c3c2b7" stroke-width="1.2" stroke-linecap="butt"/>
+        <text x="503.73" y="743" font-size="12" fill="#898781" text-anchor="middle">0.4</text>
+        <line x1="583.2" y1="724.0" x2="583.2" y2="729.0" stroke="#c3c2b7" stroke-width="1.2" stroke-linecap="butt"/>
+        <text x="583.189" y="743" font-size="12" fill="#898781" text-anchor="middle">0.5</text>
+        <line x1="662.6" y1="724.0" x2="662.6" y2="729.0" stroke="#c3c2b7" stroke-width="1.2" stroke-linecap="butt"/>
+        <text x="662.649" y="743" font-size="12" fill="#898781" text-anchor="middle">0.6</text>
+        <line x1="742.1" y1="724.0" x2="742.1" y2="729.0" stroke="#c3c2b7" stroke-width="1.2" stroke-linecap="butt"/>
+        <text x="742.108" y="743" font-size="12" fill="#898781" text-anchor="middle">0.7</text>
+        <text x="464" y="656" font-size="12" fill="#898781">T156 H-bonds per run · gray = wild type</text>
       </g>
-      <text x="454" y="764" font-size="16" fill="#0b0b0b" font-weight="700">T156–RNA H-bonds: AUROC 0.800</text>
-      <text x="454" y="789" font-size="16" fill="#52514e">p = 0.125 · gap 0.02 ≪ replicate spread</text>
+      <text x="454" y="764" font-size="16" fill="#0b0b0b" font-weight="700">Genuine runs: T156 AUROC 0.267</text>
+      <text x="454" y="789" font-size="16" fill="#52514e">Stacking lead fails the wild-type check</text>
     </g>
-    <g id="finding-3-mechanism">
+    <g id="finding-3-audit">
       <rect x="812" y="558" width="358" height="250" rx="16" fill="#ffffff" stroke="#e1e0d9" stroke-width="1.5"/>
-      <circle cx="842.0" cy="588.0" r="5.5" fill="#008300"/>
-      <text x="856" y="592.5" font-size="12" fill="#52514e" font-weight="700" letter-spacing="1.4">MECHANISM</text>
-      <text x="836" y="628" font-size="22" fill="#0b0b0b" font-weight="700">It does not localize</text>
-      <g id="finding-3-mechanism-glyph">
-        <circle cx="848.0" cy="664.0" r="10" fill="#f5f4f0" stroke="#c3c2b7" stroke-width="1.2"/>
-        <path d="M844,660 L852,668 M852,660 L844,668" stroke="#52514e" stroke-width="2" stroke-linecap="round"/>
-        <text x="868" y="669" font-size="15.5" fill="#52514e">Base U6 read equally: 0.50 vs 0.51</text>
-        <circle cx="848.0" cy="694.0" r="10" fill="#f5f4f0" stroke="#c3c2b7" stroke-width="1.2"/>
-        <path d="M844,690 L852,698 M852,690 L844,698" stroke="#52514e" stroke-width="2" stroke-linecap="round"/>
-        <text x="868" y="699" font-size="15.5" fill="#52514e">Aromatic stacking: best AUROC 0.67</text>
-        <circle cx="848.0" cy="724.0" r="10" fill="#f5f4f0" stroke="#c3c2b7" stroke-width="1.2"/>
-        <path d="M844,720 L852,728 M852,720 L844,728" stroke="#52514e" stroke-width="2" stroke-linecap="round"/>
-        <text x="868" y="729" font-size="15.5" fill="#52514e">RYKTEL contacts: wrong direction</text>
+      <circle cx="842.0" cy="588.0" r="5.5" fill="#52514e"/>
+      <text x="856" y="592.5" font-size="12" fill="#52514e" font-weight="700" letter-spacing="1.4">AUDIT</text>
+      <text x="836" y="628" font-size="22" fill="#0b0b0b" font-weight="700">16 runs were wild type</text>
+      <g id="finding-3-audit-glyph">
+        <text x="836" y="656" font-size="12" fill="#898781">10 folders × 4 run sets · color = protein simulated</text>
+        <text x="836" y="679" font-size="12" fill="#52514e">Expanse</text>
+        <rect x="908" y="668" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="931" y="668" width="20" height="14" rx="3" fill="#eb6834"/>
+        <rect x="954" y="668" width="20" height="14" rx="3" fill="#eb6834"/>
+        <rect x="977" y="668" width="20" height="14" rx="3" fill="#eb6834"/>
+        <rect x="1000" y="668" width="20" height="14" rx="3" fill="#eb6834"/>
+        <rect x="1023" y="668" width="20" height="14" rx="3" fill="#eb6834"/>
+        <rect x="1046" y="668" width="20" height="14" rx="3" fill="#2a78d6"/>
+        <rect x="1069" y="668" width="20" height="14" rx="3" fill="#2a78d6"/>
+        <rect x="1092" y="668" width="20" height="14" rx="3" fill="#2a78d6"/>
+        <rect x="1115" y="668" width="20" height="14" rx="3" fill="#898781"/>
+        <text x="836" y="698" font-size="12" fill="#52514e">Anvil</text>
+        <rect x="908" y="687" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="931" y="687" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="954" y="687" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="977" y="687" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="1000" y="687" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="1023" y="687" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="1046" y="687" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="1069" y="687" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="1092" y="687" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="1115" y="687" width="20" height="14" rx="3" fill="#52514e"/>
+        <text x="836" y="717" font-size="12" fill="#52514e">Anvil</text>
+        <rect x="908" y="706" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="931" y="706" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="954" y="706" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="977" y="706" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="1000" y="706" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="1023" y="706" width="20" height="14" rx="3" fill="#c3c2b7"/>
+        <rect x="1046" y="706" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="1069" y="706" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="1092" y="706" width="20" height="14" rx="3" fill="#52514e"/>
+        <rect x="1115" y="706" width="20" height="14" rx="3" fill="#c3c2b7"/>
+        <text x="836" y="736" font-size="12" fill="#52514e">Expanse</text>
+        <rect x="908" y="725" width="20" height="14" rx="3" fill="#c3c2b7"/>
+        <rect x="931" y="725" width="20" height="14" rx="3" fill="#eb6834"/>
+        <rect x="954" y="725" width="20" height="14" rx="3" fill="#eb6834"/>
+        <rect x="977" y="725" width="20" height="14" rx="3" fill="#c3c2b7"/>
+        <rect x="1000" y="725" width="20" height="14" rx="3" fill="#eb6834"/>
+        <rect x="1023" y="725" width="20" height="14" rx="3" fill="#eb6834"/>
+        <rect x="1046" y="725" width="20" height="14" rx="3" fill="#c3c2b7"/>
+        <rect x="1069" y="725" width="20" height="14" rx="3" fill="#2a78d6"/>
+        <rect x="1092" y="725" width="20" height="14" rx="3" fill="#c3c2b7"/>
+        <rect x="1115" y="725" width="20" height="14" rx="3" fill="#c3c2b7"/>
       </g>
-      <text x="836" y="764" font-size="16" fill="#0b0b0b" font-weight="700">The 0.800 is a diffuse 0.02 shift</text>
-      <text x="836" y="789" font-size="16" fill="#52514e">that no single contact explains</text>
+      <text x="836" y="764" font-size="16" fill="#0b0b0b" font-weight="700">A job-script fallback swapped inputs</text>
+      <text x="836" y="789" font-size="16" fill="#52514e">and produced the earlier T156 0.800</text>
     </g>
     <g id="finding-4-statistics">
       <rect x="1194" y="558" width="358" height="250" rx="16" fill="#ffffff" stroke="#e1e0d9" stroke-width="1.5"/>
@@ -249,19 +329,19 @@
       <g id="finding-4-statistics-glyph">
         <text x="1218" y="700" font-size="38" fill="#0b0b0b" font-weight="700">0.018</text>
         <text x="1218" y="724" font-size="13.5" fill="#52514e">best possible p at n = 8</text>
-        <text x="1384" y="700" font-size="38" fill="#0b0b0b" font-weight="700">≈ 34</text>
+        <text x="1384" y="700" font-size="38" fill="#0b0b0b" font-weight="700">≈ 36</text>
         <text x="1384" y="724" font-size="13.5" fill="#52514e">validated variants needed</text>
       </g>
       <text x="1218" y="764" font-size="16" fill="#0b0b0b" font-weight="700">No result here can be significant</text>
-      <text x="1218" y="789" font-size="16" fill="#52514e">after Bonferroni for 32 readouts</text>
+      <text x="1218" y="789" font-size="16" fill="#52514e">after Bonferroni for 45 readouts</text>
     </g>
   </g>
   <g id="verdict">
     <rect x="48" y="832" width="1504" height="120" rx="16" fill="#f5f4f0"/>
     <rect x="48" y="832" width="6" height="120" rx="3" fill="#52514e"/>
     <text x="84" y="864" font-size="12.5" fill="#898781" font-weight="700" letter-spacing="1.6">VERDICT</text>
-    <text x="84" y="900" font-size="23" fill="#0b0b0b" font-weight="700">A marginal signal that does not localize, and that analysis choices swing from 0.53 to 0.93.</text>
-    <text x="84" y="932" font-size="17" fill="#52514e">Paused, not abandoned: resuming would take 30+ EMSA-validated variants, a bonded-zinc model for binding free energies, and longer sampling.</text>
+    <text x="84" y="900" font-size="23" fill="#0b0b0b" font-weight="700">Once 16 misfiled wild-type runs are removed, no MD readout survives correction.</text>
+    <text x="84" y="932" font-size="17" fill="#52514e">Paused, not abandoned: re-run the 16 Anvil replicates with the right variants, from several AF3 models, and pre-register one readout.</text>
   </g>
   <g id="footer">
     <text x="48" y="980" font-size="13" fill="#898781">Labels: Akçeşme et al., RNA Biology 2025, doi:10.1080/15476286.2024.2437590</text>

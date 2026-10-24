@@ -5,13 +5,18 @@ Build every data figure in the write-up from files committed to this repo.
     python figures/src/make_figures.py        (repo .venv: numpy, pandas, matplotlib)
 
 Inputs
-    figures/data/af3_per_model.csv               af3_metrics.py (from Data/)
-    figures/data/t156_rna_hbond_series_1ns.csv   extract_t156_series.py (from DCDs)
-    expanse_md_analysis/*.csv                    the project's MD analysis outputs
-    analysis/interface_metrics_models.csv        non-binding RNA control (AF3)
+    figures/data/af3_per_model.csv        af3_metrics.py (from Data/)
+    figures/data/md_run_inventory.csv     audit_md_runs.py (protein actually simulated per run)
+    expanse_md_analysis/*.csv             the project's MD analysis outputs
+    analysis/interface_metrics_models.csv non-binding RNA control (AF3)
 
 Outputs: figures/<name>.svg (editable text) + figures/<name>.png, and
 figures/data/tables.md with the numbers behind each figure.
+
+Which MD runs count: every Anvil replicate simulated the wild-type protein,
+whatever its folder says (see audit_md_runs.py). Variant readouts therefore
+use only runs whose topology carries the variant's mutation ("genuine"
+runs); the wild-type runs, misfiled ones included, form a wild-type noise set.
 
 Naming: the MD code calls resSeq 6 "F156", but that residue is Thr156 of the
 RYKTEL motif. Five other per-residue columns carry the same kind of shifted
@@ -24,7 +29,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.lines import Line2D
 from matplotlib.ticker import FuncFormatter, MaxNLocator
 
@@ -36,7 +40,10 @@ FIGDATA = ROOT / "figures" / "data"
 
 # MD analysis code names C208A "C212A" (the residue it mutates in construct numbering).
 MD_NAME = {"C212A": "C208A"}
-N_FEATURES_SCREENED = 32  # 30 in auroc_no_c212a.csv + Q-score + MM-GBSA (figure M2)
+STACKING = ["Y154", "F162", "Y170", "F176", "F180", "F200", "F205", "Y208", "F214",
+            "aromatic_any", "aromatic_sum", "finger1_any", "finger2_any"]
+# 32 readouts in the screen (figure M2) + 13 aromatic-stacking readouts.
+N_FEATURES_SCREENED = 32 + len(STACKING)
 
 FEATURE_LABELS = {
     "hbond_RNA_F156": "T156 H-bonds to RNA",
@@ -61,6 +68,11 @@ FEATURE_LABELS = {
     "binding_residue_rmsf_A": "Binding-residue RMSF",
     "qscore": "Native-contact Q-score", "mmgbsa": "MM-GBSA (Zn stripped)",
 }
+# Direction scored as deleterious (as in multi_replicate_auroc_v2.py).
+MD_SIGN = {"rmsd_ca_last20pct": 1, "rmsd_zf1_last20pct": 1, "rmsd_zf2_last20pct": 1,
+           "rmsd_rnaP_last20pct": 1, "contacts_last20pct": -1, "coulomb_prot_rna": 1,
+           "salt_bridges_prot_rna": -1, "interface_atom_count_5A": -1,
+           "binding_residue_rmsf_A": 1, "qscore": -1, "mmgbsa": 1}
 
 TABLES: list[str] = []
 
@@ -106,6 +118,29 @@ def critical_auroc(m: int, n: int, alpha: float) -> float:
     return ok[0] / (m * n) if len(ok) else np.nan
 
 
+def exact_p(a: float) -> float:
+    """One-sided exact p for an AUROC on 5 deleterious vs 3 neutral."""
+    return float(tail_p(5, 3)[int(round(a * 15))])
+
+
+def wt_noise_p(runs: pd.DataFrame, col: str, sign: int, b: int = 20000) -> float:
+    """How often wild-type runs, dealt out as fake variants with the genuine run counts,
+    rank at least as well as the real variants do."""
+    labeled = runs[runs["genuine"] & runs["label"].isin(S.DELETERIOUS + S.NEUTRAL)]
+    counts = labeled.groupby("label").size()
+    observed = auroc(labeled.groupby("label")[col].mean().to_dict(), sign)
+    pool = runs.loc[runs["wt_protein"], col].to_numpy()
+    rng = np.random.default_rng(0)
+    hits = 0
+    for _ in range(b):
+        shuffled, i, fake = rng.permutation(pool), 0, {}
+        for v in S.DELETERIOUS + S.NEUTRAL:
+            fake[v] = shuffled[i:i + counts[v]].mean()
+            i += counts[v]
+        hits += auroc(fake, sign) >= observed - 1e-12
+    return hits / b
+
+
 # ── Small drawing helpers ─────────────────────────────────────────────────
 def dot(ax, x, y, cls, s=46, ring=True, z=3, alpha=1.0, **kw):
     ax.scatter(x, y, s=s, color=S.CLASS_COLOR[cls], marker=S.CLASS_MARKER[cls],
@@ -125,15 +160,12 @@ def class_items(classes):
     return [(S.CLASS_COLOR[c], S.CLASS_MARKER[c], S.CLASS_LABEL[c]) for c in classes]
 
 
-METHOD_ITEMS = [(S.MD, "o", "MD feature"), (S.AF3, "o", "AlphaFold 3 confidence")]
-
-
 def significance_band(ax, crit: float, label_y: float = 1.01) -> None:
     """Wash over AUROC values that would reach uncorrected p < 0.05; label above the axes."""
     lo = crit - 1 / 30  # halfway to the next attainable value below (step = 1/15)
     ax.axvspan(lo, 1.02, color=S.WASH, lw=0, zorder=0)
-    ax.text(lo + 0.004, label_y, "p < 0.05, uncorrected", transform=ax.get_xaxis_transform(),
-            fontsize=7.5, color=S.MUTED, va="bottom", ha="left")
+    ax.text(1.02, label_y, "p < 0.05, uncorrected", transform=ax.get_xaxis_transform(),
+            fontsize=7.5, color=S.MUTED, va="bottom", ha="right")
 
 
 def strip_y(ax) -> None:
@@ -150,13 +182,37 @@ def load_af3() -> pd.DataFrame:
     return pd.read_csv(FIGDATA / "af3_per_model.csv")
 
 
-def load_t156_reps() -> pd.DataFrame:
-    """Per-trajectory T156 means (standardized re-analysis, 1 ns sampling)."""
-    d = pd.read_csv(MDA / "diagnostic_f156_convergence.csv")
-    d["variant"] = d["variant"].replace(MD_NAME)
-    d["cls"] = d["variant"].map(S.VARIANT_CLASS)
-    d["used"] = d["ns"] >= 180
-    return d
+def with_audit(df: pd.DataFrame, ns_col: str | None = None) -> pd.DataFrame:
+    """Attach what each run actually simulated (md_run_inventory.csv) to a per-run table.
+
+    Adds: label (display name), wt_protein (topology carries the WT protein),
+    genuine (topology carries the folder's own mutation), used (run long enough).
+    """
+    inv = pd.read_csv(FIGDATA / "md_run_inventory.csv")
+    inv["variant"] = inv["folder"].replace({"C208A": "C212A"})
+    out = df.merge(inv[["source", "variant", "protein"]], on=["source", "variant"],
+                   how="left", validate="one_to_one")
+    assert out["protein"].notna().all(), "run missing from md_run_inventory.csv"
+    out["label"] = out["variant"].replace(MD_NAME)
+    out["wt_protein"] = out["protein"] == "WT"
+    out["genuine"] = ~out["wt_protein"]
+    if ns_col == "ns":
+        out["used"] = out["ns"] >= 180
+    elif ns_col == "n_frames":
+        out["used"] = out["n_frames"] >= 1800
+    else:
+        out["used"] = True
+    return out
+
+
+def load_t156_runs() -> pd.DataFrame:
+    """Per-run T156 means (1 ns sampling, <= 200 ns) with the audit attached."""
+    return with_audit(pd.read_csv(MDA / "diagnostic_f156_convergence.csv"), "ns")
+
+
+def load_stacking_runs() -> pd.DataFrame:
+    s = pd.read_csv(MDA / "stacking_metrics.csv").rename(columns={"cls": "class"})
+    return with_audit(s, "ns")
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -166,7 +222,6 @@ def load_t156_reps() -> pd.DataFrame:
 STRUCTURE_LABELS = {
     "D210E": (735, 404, "right", "D210E†"), "T187S": (1085, 318, "center", None),
     "S185N": (1255, 318, "center", None), "R184C": (1425, 318, "center", None),
-    "T156": (1290, 690, "right", None),
     "Y154H": (1905, 655, "left", None), "R160W": (1905, 735, "left", None),
     "G204D": (500, 735, "right", None), "C206F": (900, 1100, "center", None),
     "C208A": (1150, 1100, "center", "C208A†"),
@@ -187,9 +242,8 @@ def fig_structure() -> None:
     ax.axis("off")
     for key, (lx, ly, ha, text) in STRUCTURE_LABELS.items():
         r = anchors.loc[key]
-        label = text or key
-        ax.annotate(label, xy=(r["x_px"], r["y_px"]), xytext=(lx, ly), ha=ha, va="center",
-                    fontsize=8.6, color=S.INK, fontweight="bold" if key == "T156" else None,
+        ax.annotate(text or key, xy=(r["x_px"], r["y_px"]), xytext=(lx, ly), ha=ha,
+                    va="center", fontsize=8.6, color=S.INK,
                     arrowprops=dict(arrowstyle="-", color=S.MUTED, lw=0.7, shrinkA=3,
                                     shrinkB=17))
     for key, (dx, dy) in {"5'": (-55, 0), "3'": (80, 0)}.items():
@@ -202,8 +256,7 @@ def fig_structure() -> None:
             color=S.INK2, linespacing=1.25)
     ax.text(1330, 1100, "RNA", ha="left", va="center", fontsize=8.6, color=S.INK2)
     legend(fig, class_items(["deleterious", "neutral", "zn_ctrl"])
-           + [(S.MD, "o", "T156 (best MD feature)"), ("#dfe2e6", "o", "Zn$^{2{+}}$")],
-           top_in=0.82)
+           + [("#dfe2e6", "o", "Zn$^{2{+}}$")], top_in=0.82)
     fig.text(0.012, 0.012, "† C208A and D210E follow Akçeşme et al. 2025; in the construct "
              "numbering used here they mutate C212 and D219.", fontsize=7.6, color=S.MUTED)
     S.save(fig, "fig1_structure")
@@ -341,30 +394,49 @@ SOURCES = [("expanse_orig", "Expanse V100", "Replicate 1"),
            ("expanse_rep2", "Expanse V100", "Replicate 4")]
 
 
-def fig_md_sampling(reps: pd.DataFrame) -> None:
+def protein_class(protein: str) -> str:
+    """Class of the protein a run actually simulated (not of its folder)."""
+    if protein == "WT":
+        return "WT"
+    if protein == "C212A":
+        return "zn_ctrl"
+    if protein == "D219E":
+        return "neutral"
+    return S.VARIANT_CLASS[protein]
+
+
+def fig_md_sampling(runs: pd.DataFrame) -> None:
     rows = S.DISPLAY_ORDER
-    used = reps[reps["used"]]
-    fig, axes = plt.subplots(1, 4, figsize=(8.6, 4.7), sharey=True)
-    fig.subplots_adjust(left=0.085, right=0.92, top=S.top(fig, 1.62), bottom=0.62 / 4.7,
+    used = runs[runs["used"]]
+    genuine = used[used["genuine"] & (used["label"] != "WT")]
+    wt_set = used[used["wt_protein"]]
+    misfiled = wt_set[wt_set["label"] != "WT"]
+    fig, axes = plt.subplots(1, 4, figsize=(8.6, 4.9), sharey=True)
+    fig.subplots_adjust(left=0.085, right=0.915, top=S.top(fig, 1.62), bottom=0.62 / 4.9,
                         wspace=0.1)
-    S.header(fig, f"{len(reps)} production runs, {len(used)} used in the analysis",
-             f"OpenMM · AMBER14SB + RNA.OL3 · TIP3P, 0.15 M NaCl · 310 K, NPT. Runs of at least "
-             f"180 ns count, capped at 200 ns:\n{used['ns'].clip(upper=200).sum() / 1000:.1f} µs "
-             f"analyzed. Runs that stopped early (light bars) are left out of every average.")
-    handles = [plt.Rectangle((0, 0), 1, 1, color=S.INK2, label="used (≥ 180 ns)"),
-               plt.Rectangle((0, 0), 1, 1, color=S.AXIS, label="partial, excluded")]
-    fig.legend(handles=handles, loc="upper left", bbox_to_anchor=(0.012, S.top(fig, 1.0)),
-               ncol=2, handlelength=1.4, handleheight=0.7, columnspacing=1.6, borderaxespad=0)
+    S.header(fig, "Every Anvil run simulated the wild type",
+             f"Bar color = the protein actually in each run's topology, whatever its folder "
+             f"says. {len(genuine)} complete runs carry their\nvariant; {len(misfiled)} complete "
+             f"runs in variant folders are wild type and join the {len(wt_set) - len(misfiled)} "
+             f"real wild-type runs as a {len(wt_set)}-run wild-type set.")
+    legend(fig, class_items(["WT", "deleterious", "neutral", "zn_ctrl"])
+           + [(S.AXIS, "s", "stopped early (< 180 ns)")], top_in=1.0)
     ypos = {v: len(rows) - 1 - i for i, v in enumerate(rows)}
     for ax, (src, platform, label) in zip(axes, SOURCES):
-        s = reps[reps["source"] == src].set_index("variant")
+        s = runs[runs["source"] == src].set_index("label")
         for v in rows:
             if v not in s.index:
                 continue
-            ns, ok = min(s.loc[v, "ns"], 200), s.loc[v, "used"]
-            ax.barh(ypos[v], ns, height=0.56, color=S.INK2 if ok else S.AXIS, lw=0)
-            if not ok:
-                ax.text(ns + 6, ypos[v], f"{ns:.0f} ns", va="center", fontsize=7.3, color=S.MUTED)
+            r = s.loc[v]
+            ns = min(r["ns"], 200)
+            color = S.CLASS_COLOR[protein_class(r["protein"])]
+            ax.barh(ypos[v], ns, height=0.56, color=color if r["used"] else S.AXIS, lw=0)
+            if not r["used"]:
+                ax.text(ns + 6, ypos[v], f"{ns:.0f} ns", va="center", fontsize=7.3,
+                        color=S.MUTED)
+            elif r["wt_protein"] and v != "WT":
+                ax.text(8, ypos[v], "WT", va="center", ha="left", fontsize=7.3,
+                        color="#ffffff", fontweight="bold")
         ax.set_xlim(0, 215)
         ax.set_xticks([0, 100, 200])
         ax.set_title(f"{label}\n", fontsize=9.8)
@@ -372,258 +444,194 @@ def fig_md_sampling(reps: pd.DataFrame) -> None:
                 va="bottom")
         strip_y(ax)
         S.vgrid(ax)
-    axes[0].set_yticks([ypos[v] for v in rows], rows)
+    axes[0].set_yticks([ypos[v] for v in rows], [f"{v} folder" if v != "WT" else "WT folder"
+                                                 for v in rows], fontsize=8)
     axes[0].set_ylim(-0.6, len(rows) - 0.4)
     fig.text(0.5, 0.025, "analyzed production time per run (ns)", ha="center", fontsize=9,
              color=S.INK2)
-    n_used = used.groupby("variant").size()
+    n_gen = genuine.groupby("label").size()
     for v in rows:
-        axes[-1].text(1.06, ypos[v], f"{n_used.get(v, 0)}",
-                      transform=axes[-1].get_yaxis_transform(), va="center", ha="left",
-                      fontsize=9, color=S.INK, fontweight="bold")
-    axes[-1].text(1.06, len(rows) - 0.35, "used", transform=axes[-1].get_yaxis_transform(),
+        n = len(wt_set) if v == "WT" else n_gen.get(v, 0)
+        axes[-1].text(1.07, ypos[v], f"{n}", transform=axes[-1].get_yaxis_transform(),
+                      va="center", ha="left", fontsize=9, color=S.INK, fontweight="bold")
+    axes[-1].text(1.07, len(rows) - 0.35, "usable", transform=axes[-1].get_yaxis_transform(),
                   va="bottom", ha="left", fontsize=7.8, color=S.MUTED)
     S.save(fig, "figM1_md_sampling")
-    t = reps.pivot(index="variant", columns="source", values="ns").loc[
+    t = runs.pivot(index="label", columns="source", values="protein").loc[
         rows, [s for s, *_ in SOURCES]]
-    table("Analyzed ns per run (≥ 180 ns = used)", t.clip(upper=200).reset_index(),
+    table("Protein actually simulated, by folder and replicate", t.reset_index(), floatfmt="")
+    n = runs.pivot(index="label", columns="source", values="ns").loc[rows, [s for s, *_ in SOURCES]]
+    table("Analyzed ns per run (≥ 180 ns = complete)", n.clip(upper=200).reset_index(),
           floatfmt=".0f")
 
 
-def load_auroc_table() -> pd.DataFrame:
-    a = pd.read_csv(MDA / "auroc_no_c212a.csv")
-    q = pd.read_csv(MDA / "mmgbsa_qscore_averaged.csv").set_index("variant")
-    extra = pd.DataFrame([
-        {"feature": "qscore", "AUROC": auroc(q["qscore_last20pct"].to_dict(), -1),
-         "origin": "MD-Qscore"},
-        {"feature": "mmgbsa", "AUROC": auroc(q["mmgbsa_mean_kJmol"].to_dict(), +1),
-         "origin": "MD-energy"},
-    ])
-    a = pd.concat([a, extra], ignore_index=True)
-    a["method"] = np.where(a["origin"] == "AF3", "AF3", "MD")
-    a["label"] = a["feature"].map(FEATURE_LABELS)
-    return a.sort_values("AUROC", ascending=True).reset_index(drop=True)
+def screen_table() -> pd.DataFrame:
+    """AUROC for the 32-readout screen: genuine runs only, and as first published."""
+    m = with_audit(pd.read_csv(MDA / "multi_replicate_all_metrics.csv"))
+    q = with_audit(pd.read_csv(MDA / "mmgbsa_qscore_all.csv"), "n_frames")
+    q = q.rename(columns={"qscore_last20pct": "qscore", "mmgbsa_mean_kJmol": "mmgbsa"})
+    signs = {**MD_SIGN, **{c: -1 for c in m.columns if c.startswith("hbond_RNA_")}}
+    published = pd.read_csv(MDA / "auroc_no_c212a.csv").set_index("feature")["AUROC"]
+    q_all = q[q["used"]].groupby("label")[["qscore", "mmgbsa"]].mean()
+    for col in ("qscore", "mmgbsa"):
+        published[col] = auroc(q_all[col].to_dict(), signs[col])
+
+    rows = []
+    for feature, a_pub in published.items():
+        if feature not in FEATURE_LABELS:
+            continue
+        if feature in signs:
+            src = q if feature in ("qscore", "mmgbsa") else m
+            gen = src[src["used"] & src["genuine"]].groupby("label")[feature].mean()
+            a_gen, method = auroc(gen.to_dict(), signs[feature]), "MD"
+        else:
+            a_gen, method = a_pub, "AF3"  # AF3 readouts do not depend on MD runs
+        rows.append({"feature": feature, "label": FEATURE_LABELS[feature], "method": method,
+                     "AUROC_genuine": a_gen, "AUROC_published": a_pub})
+    return pd.DataFrame(rows).sort_values("AUROC_genuine").reset_index(drop=True)
 
 
-def fig_auroc_ranking(t156_std: float) -> None:
-    a = load_auroc_table()
-    n = len(a)
+def fig_auroc_ranking(t: pd.DataFrame) -> None:
+    n = len(t)
     crit = critical_auroc(5, 3, 0.05)
-    fig, ax = plt.subplots(figsize=(8.6, 8.9))
-    fig.subplots_adjust(left=0.34, right=0.955, top=S.top(fig, 1.6), bottom=0.6 / 8.9)
-    S.header(fig, "One MD feature edges out AF3, and nothing reaches significance",
-             f"Replicate-averaged AUROC for all {n} features screened (5 deleterious vs 3 neutral), "
-             f"direction fixed in advance.\nBelow 0.5 = leaned the wrong way. Open circle = T156 "
-             f"after the standardized re-analysis ({t156_std:.3f}).")
-    legend(fig, METHOD_ITEMS, top_in=1.0)
+    best_md = t[t["method"] == "MD"]["AUROC_genuine"].max()
+    fig, ax = plt.subplots(figsize=(8.6, 9.0))
+    fig.subplots_adjust(left=0.34, right=0.955, top=S.top(fig, 1.6), bottom=0.6 / 9.0)
+    S.header(fig, "With only genuine runs, no MD readout beats AlphaFold 3",
+             f"AUROC for all {n} screened readouts, 5 deleterious vs 3 neutral, direction fixed "
+             f"in advance. Filled = genuine variant runs only\n(1–2 per variant). Open = as first "
+             f"computed, with 16 wild-type runs averaged into the variants. Best MD: {best_md:.3f}.")
+    legend(fig, [(S.MD, "o", "MD readout, genuine runs"), (S.AF3, "o", "AlphaFold 3 confidence"),
+                 (S.SURFACE, "o", "MD, as first computed")], top_in=1.0)
+    fig.legends[-1].legend_handles[2].set_markeredgecolor(S.MUTED)
     significance_band(ax, crit)
     ax.axvline(0.5, color=S.INK2, lw=0.9, zorder=1)
     ax.text(0.5, 1.01, "chance", transform=ax.get_xaxis_transform(), fontsize=7.5,
             color=S.MUTED, ha="center", va="bottom")
-    for i, r in a.iterrows():
+    for i, r in t.iterrows():
         c = S.AF3 if r["method"] == "AF3" else S.MD
-        ax.plot([0.5, r["AUROC"]], [i, i], color=c, lw=1.4, alpha=0.55, zorder=2,
-                solid_capstyle="butt")
-        ax.scatter(r["AUROC"], i, s=40, color=c, edgecolors=S.SURFACE, lw=1.2, zorder=3)
-        if r["AUROC"] >= 0.7 or r["AUROC"] <= 0.25:
-            right = r["AUROC"] >= 0.5
-            ax.text(r["AUROC"] + (0.018 if right else -0.018), i, f"{r['AUROC']:.3f}",
-                    va="center", ha="left" if right else "right", fontsize=8, color=S.INK,
+        a = r["AUROC_genuine"]
+        if r["method"] == "MD" and abs(r["AUROC_published"] - a) > 1e-9:
+            ax.plot([r["AUROC_published"], a], [i, i], color=S.AXIS, lw=1.0, zorder=1)
+            ax.scatter(r["AUROC_published"], i, s=34, facecolors=S.SURFACE,
+                       edgecolors=S.MUTED, lw=1.1, zorder=2)
+        ax.plot([0.5, a], [i, i], color=c, lw=1.4, alpha=0.55, zorder=2, solid_capstyle="butt")
+        ax.scatter(a, i, s=40, color=c, edgecolors=S.SURFACE, lw=1.2, zorder=3)
+        if a >= 0.7 or a <= 0.25:
+            right = a >= 0.5
+            ax.text(a + (0.018 if right else -0.018), i, f"{a:.3f}", va="center",
+                    ha="left" if right else "right", fontsize=8, color=S.INK,
                     fontweight="bold" if right else None)
-    top = a.index[a["feature"] == "hbond_RNA_F156"][0]
-    ax.scatter(t156_std, top, s=44, facecolors=S.SURFACE, edgecolors=S.MD, lw=1.5, zorder=4)
-    ax.set_yticks(range(n), a["label"])
-    for tick, (_, r) in zip(ax.get_yticklabels(), a.iterrows()):
+    ax.set_yticks(range(n), t["label"])
+    for tick, (_, r) in zip(ax.get_yticklabels(), t.iterrows()):
         if r["feature"] in ("hbond_RNA_F156", "pair_ipTM_protein_rna"):
             tick.set_color(S.INK)
             tick.set_fontweight("bold")
-    ax.set_xlim(0.1, 1.02)
+    ax.set_xlim(0.0, 1.02)
     ax.set_ylim(-0.7, n - 0.3)
     ax.set_xlabel("AUROC (replicate-averaged, C208A control excluded)")
     strip_y(ax)
     S.vgrid(ax)
     S.save(fig, "figM2_auroc_ranking")
-    t = a.sort_values("AUROC", ascending=False)[["label", "method", "AUROC", "feature"]]
-    t = t.rename(columns={"feature": "column in analysis CSVs"})
-    table("Feature AUROCs (5 deleterious vs 3 neutral)", t)
+    out = t.sort_values("AUROC_genuine", ascending=False)[
+        ["label", "method", "AUROC_genuine", "AUROC_published", "feature"]]
+    table("Screen AUROCs: genuine runs vs as first computed (5 deleterious vs 3 neutral)",
+          out.rename(columns={"feature": "column in analysis CSVs"}))
 
 
-def fig_t156_replicates(reps: pd.DataFrame) -> None:
-    used = reps[reps["used"]]
-    means = used.groupby("variant")["f156_mean"].mean().sort_values()
-    rows = list(means.index)
-    ypos = {v: i for i, v in enumerate(rows)}
-    a = auroc(means.to_dict(), -1)
-    p = tail_p(5, 3)[int(round(a * 15))]
-    del_mean = means[S.DELETERIOUS].mean()
-    neu_mean = means[S.NEUTRAL].mean()
-
-    fig, ax = plt.subplots(figsize=(8.6, 5.0))
-    fig.subplots_adjust(left=0.105, right=0.86, top=S.top(fig, 1.55), bottom=0.62 / 5.0)
-    S.header(fig, "The best MD signal is smaller than the noise between replicates",
-             f"T156–RNA hydrogen bonds per frame, one small dot per 200 ns replicate. AUROC {a:.3f} "
-             f"({int(round(a * 15))} of 15 pairs), one-sided p = {p:.3f}.\nClass means differ by "
-             f"{neu_mean - del_mean:.3f}; replicates of a single variant spread 0.10–0.26.")
-    legend(fig, class_items(["WT", "deleterious", "neutral", "zn_ctrl"]), top_in=1.0)
-    ax.axvspan(del_mean, neu_mean, color=S.WASH, zorder=0, lw=0)
-    ax.axvline(del_mean, color=S.DEL, lw=1.0, alpha=0.85, zorder=1)
-    ax.axvline(neu_mean, color=S.NEU, lw=1.0, alpha=0.85, zorder=1)
-    ax.text(del_mean - 0.003, 1.01, "deleterious mean", transform=ax.get_xaxis_transform(),
-            ha="right", va="bottom", fontsize=7.5, color=S.INK2)
-    ax.text(neu_mean + 0.003, 1.01, "neutral mean", transform=ax.get_xaxis_transform(),
-            ha="left", va="bottom", fontsize=7.5, color=S.INK2)
-    for v in rows:
+def noise_panel(ax, runs: pd.DataFrame, col: str, sign: int, title: str, xlabel: str,
+                xlim: tuple[float, float]) -> tuple[float, float]:
+    """One panel of figure M3: the wild-type run set on top, genuine variant runs below."""
+    used = runs[runs["used"]]
+    wt = used.loc[used["wt_protein"], col].to_numpy()
+    gen = used[used["genuine"] & (used["label"] != "WT")]
+    order = [v for v in S.DISPLAY_ORDER if v != "WT"]
+    ypos = {v: len(order) - 1 - i for i, v in enumerate(order)}
+    top = len(order) + 0.6
+    rng = np.random.default_rng(5)
+    ax.axvspan(wt.min(), wt.max(), color=S.WASH, lw=0, zorder=0)
+    ax.axvline(np.median(wt), color=S.WT, lw=0.9, alpha=0.6, zorder=1)
+    ax.scatter(wt, top + rng.uniform(-0.28, 0.28, len(wt)), s=22, color=S.WT, alpha=0.7, lw=0,
+               marker="s", zorder=2)
+    at_zero = int((wt < 0.02).sum())
+    if at_zero > 2:
+        ax.annotate(f"{at_zero} runs at 0", xy=(0, top - 0.3), xytext=(0.06, top - 0.75),
+                    fontsize=7.4, color=S.INK2, va="center",
+                    arrowprops=dict(arrowstyle="-", color=S.MUTED, lw=0.7))
+    means = gen.groupby("label")[col].mean()
+    for v in order:
         cls = S.VARIANT_CLASS[v]
-        vals = used.loc[used["variant"] == v, "f156_mean"].to_numpy()
-        ax.plot([vals.min(), vals.max()], [ypos[v]] * 2, color=S.CLASS_COLOR[cls], lw=1.3,
-                alpha=0.35, zorder=2, solid_capstyle="round")
-        ax.scatter(vals, [ypos[v]] * len(vals), s=30, color=S.CLASS_COLOR[cls], alpha=0.55,
-                   lw=0, zorder=3, marker=S.CLASS_MARKER[cls])
-        dot(ax, means[v], ypos[v], cls, s=74, z=4)
-        ax.text(1.015, ypos[v], f"{means[v]:.3f}", transform=ax.get_yaxis_transform(),
-                va="center", fontsize=8.5, color=S.INK)
-        ax.text(1.105, ypos[v], f"n={len(vals)}", transform=ax.get_yaxis_transform(),
-                va="center", fontsize=7.8, color=S.MUTED)
-    ax.text(1.015, len(rows) - 0.4, "mean", transform=ax.get_yaxis_transform(), va="bottom",
-            fontsize=7.8, color=S.MUTED)
-    ax.set_yticks(range(len(rows)), rows)
-    ax.set_ylim(-0.6, len(rows) - 0.4)
-    ax.set_xlim(0.33, 0.75)
-    ax.set_xlabel("T156–RNA hydrogen bonds per frame (1 ns sampling, ≤ 200 ns per run)")
+        vals = gen.loc[gen["label"] == v, col].to_numpy()
+        ax.scatter(vals, [ypos[v]] * len(vals), s=24, color=S.CLASS_COLOR[cls], alpha=0.5,
+                   lw=0, marker=S.CLASS_MARKER[cls], zorder=3)
+        dot(ax, means[v], ypos[v], cls, s=60, z=4)
+    labeled = means.reindex(S.DELETERIOUS + S.NEUTRAL)
+    a = auroc(labeled.to_dict(), sign)
+    p_noise = wt_noise_p(used, col, sign)
+    ax.set_yticks([top] + [ypos[v] for v in order],
+                  [f"Wild type ({len(wt)} runs)"] + order, fontsize=8)
+    ax.set_ylim(-0.6, top + 0.55)
+    ax.set_xlim(*xlim)
+    ax.set_title(f"{title}\n\n", fontsize=9.8)
+    ax.text(0, 1.012, f"AUROC {a:.3f} · exact p = {exact_p(a):.3f} · "
+            f"wild-type-noise p = {p_noise:.2f}", transform=ax.transAxes, fontsize=7.8,
+            color=S.MUTED, va="bottom")
+    ax.set_xlabel(xlabel, fontsize=8.5)
     strip_y(ax)
     S.vgrid(ax)
-    S.save(fig, "figM3_t156_replicates")
-    t = used.groupby("variant")["f156_mean"].agg(["mean", "min", "max", "count"]).loc[rows[::-1]]
-    t.insert(0, "class", [S.VARIANT_CLASS[v] for v in t.index])
-    table("T156–RNA H-bonds per frame (runs ≥ 180 ns)", t.reset_index())
+    return a, p_noise
 
 
-def fig_t156_convergence(reps: pd.DataFrame) -> None:
-    s = pd.read_csv(FIGDATA / "t156_rna_hbond_series_1ns.csv")
-    s["variant"] = s["variant"].replace(MD_NAME)
-    used_keys = set(map(tuple, reps.loc[reps["used"], ["variant", "source"]].to_numpy()))
-    order = ["WT", "Y154H", "R160W", "R184C", "G204D", "C206F", "S185N", "T187S", "D210E", "C208A"]
-    means = reps[reps["used"]].groupby("variant")["f156_mean"].mean()
-    del_mean, neu_mean = means[S.DELETERIOUS].mean(), means[S.NEUTRAL].mean()
-
-    fig, axes = plt.subplots(2, 5, figsize=(8.6, 5.3), sharex=True, sharey=True)
-    fig.subplots_adjust(left=0.075, right=0.985, top=S.top(fig, 1.55), bottom=0.55 / 5.3,
-                        wspace=0.2, hspace=0.34)
+def fig_md_vs_wt_noise(t156: pd.DataFrame, stack: pd.DataFrame) -> dict:
+    fig, axes = plt.subplots(1, 2, figsize=(8.6, 5.3))
+    fig.subplots_adjust(left=0.135, right=0.985, top=S.top(fig, 1.95), bottom=0.6 / 5.3,
+                        wspace=0.42)
+    S.header(fig, "Variant runs against the wild-type noise floor",
+             "One small dot per genuine 200 ns run, large dot = variant mean. Gray squares = "
+             "the wild-type runs; the wash spans their range.\nWild-type-noise p: how often "
+             "wild-type runs, dealt out as fake variants with the same run counts, rank as well.")
     legend(fig, class_items(["WT", "deleterious", "neutral", "zn_ctrl"]), top_in=1.0)
-    S.header(fig, "Each replicate settles, but on its own plateau",
-             "Running mean of T156–RNA H-bonds for every replicate. Gray band = gap between the "
-             "deleterious and neutral class means,\nthe entire signal behind the 0.800 AUROC. "
-             "Faint lines are partial runs left out of the averages.")
-    for ax, v in zip(axes.flat, order):
-        cls = S.VARIANT_CLASS[v]
-        ax.axhspan(del_mean, neu_mean, color=S.AXIS, alpha=0.6, lw=0, zorder=0)
-        for src, *_ in SOURCES:
-            g = s[(s["variant"] == v) & (s["source"] == src)]
-            if g.empty:
-                continue
-            run = np.cumsum(g["hbonds"].to_numpy()) / np.arange(1, len(g) + 1)
-            t = g["t_ns"].to_numpy()
-            keep = t >= 3
-            full = (v, src) in used_keys
-            ax.plot(t[keep], run[keep], color=S.CLASS_COLOR[cls], lw=1.5 if full else 1.0,
-                    alpha=0.95 if full else 0.3, zorder=2 if full else 1)
-        ax.set_title(v, fontsize=9.2, pad=4)
-        ax.set_ylim(0.15, 1.0)
-        ax.set_xlim(0, 200)
-        ax.set_xticks([0, 100, 200])
-        S.hgrid(ax)
-    for ax in axes[:, 0]:
-        ax.set_ylabel("running mean")
-    fig.text(0.53, 0.025, "simulation time (ns)", ha="center", fontsize=9, color=S.INK2)
-    S.save(fig, "figM4_t156_convergence")
+    a1, p1 = noise_panel(axes[0], t156, "f156_mean", -1, "a  T156–RNA hydrogen bonds",
+                         "H-bonds per frame (1 ns sampling)", (0.33, 0.75))
+    a2, p2 = noise_panel(axes[1], stack, "aromatic_any", -1, "b  Aromatic stacking on a base",
+                         "fraction of frames with a ring stacked", (-0.04, 1.0))
+    S.save(fig, "figM3_wt_noise")
+    rows = []
+    for name, runs, col in [("T156 H-bonds", t156, "f156_mean"),
+                            ("Aromatic stacking (any ring)", stack, "aromatic_any")]:
+        used = runs[runs["used"]]
+        for v in [v for v in S.DISPLAY_ORDER if v != "WT"]:
+            vals = used.loc[used["genuine"] & (used["label"] == v), col]
+            rows.append({"readout": name, "variant": v, "class": S.VARIANT_CLASS[v],
+                         "genuine_runs": len(vals), "mean": vals.mean()})
+        wt = used.loc[used["wt_protein"], col]
+        rows.append({"readout": name, "variant": "wild-type set", "class": "WT",
+                     "genuine_runs": len(wt), "mean": wt.mean()})
+    table("Per-variant means on genuine runs, and the wild-type set", pd.DataFrame(rows))
+    return {"t156": (a1, p1), "stacking": (a2, p2)}
 
 
-def fig_mechanism_checks() -> None:
-    base = pd.read_csv(MDA / "t156_base_reading.csv", index_col=0)
-    base.index = [MD_NAME.get(v, v) for v in base.index]
-    stack = pd.read_csv(MDA / "stacking_metrics.csv")
-    stack = stack[stack["ns"] >= 180]
-    stack["variant"] = stack["variant"].replace(MD_NAME)
-    aro = ["Y154", "F162", "Y170", "F176", "F180", "F200", "F205", "Y208", "F214"]
-    combos = {"aromatic_any": "any aromatic", "aromatic_sum": "all aromatics, summed",
-              "finger1_any": "any, finger 1", "finger2_any": "any, finger 2"}
-    sm = stack.groupby("variant")[aro + list(combos)].mean()
-    st = pd.DataFrame([(c, combos.get(c, c), auroc(sm[c].to_dict(), -1))
-                       for c in aro + list(combos)], columns=["feature", "label", "AUROC"])
-    ryk = pd.read_csv(MDA / "t156_ryktel_propagation.csv")
-    ryk["variant"] = ryk["variant"].replace(MD_NAME)
-    ryk = ryk.sort_values("RYKTEL_sum").reset_index(drop=True)
-    u6 = base["6"]
-    u6_del, u6_neu = u6[S.DELETERIOUS].mean(), u6[S.NEUTRAL].mean()
-
-    fig = plt.figure(figsize=(8.6, 5.0))
-    gs = fig.add_gridspec(1, 3, width_ratios=[1.25, 1, 1], left=0.075, right=0.985,
-                          top=S.top(fig, 1.45), bottom=0.85 / 5.0, wspace=0.42)
-    S.header(fig, "Three ways the signal could have localized, and didn't",
-             "If deleterious variants broke one specific contact, at least one of these "
-             "readouts should separate the classes. None does.")
-    legend(fig, class_items(["WT", "deleterious", "neutral", "zn_ctrl"]), top_in=0.8)
-
-    ax = fig.add_subplot(gs[0])
-    rows = S.DISPLAY_ORDER
-    mat = base.loc[rows].to_numpy()
-    cmap = LinearSegmentedColormap.from_list("blue", ["#ffffff"] + S.BLUE_RAMP[2:11])
-    ax.imshow(mat, cmap=cmap, vmin=0, vmax=0.65, aspect="auto")
-    for i, v in enumerate(rows):
-        ax.text(5, i, f"{mat[i, 5]:.2f}", ha="center", va="center", fontsize=7.4,
-                color="#ffffff" if mat[i, 5] > 0.4 else S.INK)
-    ax.set_xticks(range(9), [f"{b}{i + 1}" for i, b in enumerate("UUAUUUAUU")], fontsize=7.6)
-    ax.set_yticks(range(len(rows)), rows, fontsize=8)
-    ax.tick_params(length=0)
-    for sp in ax.spines.values():
-        sp.set_visible(False)
-    ax.set_title("a  T156 reads one base, U6", fontsize=9.6)
-    ax.text(0, -0.09, f"contact occupancy per base\ndeleterious {u6_del:.2f} vs "
-            f"neutral {u6_neu:.2f} at U6", transform=ax.transAxes, fontsize=7.4,
-            color=S.MUTED, va="top", linespacing=1.35)
-
-    ax = fig.add_subplot(gs[1])
-    st = st.sort_values("AUROC").reset_index(drop=True)
-    ax.axvline(0.5, color=S.INK2, lw=0.9, zorder=1)
-    for i, r in st.iterrows():
-        ax.plot([0.5, r["AUROC"]], [i, i], color=S.INK2, lw=1.3, alpha=0.4, zorder=2)
-        ax.scatter(r["AUROC"], i, s=34, color=S.INK2, edgecolors=S.SURFACE, lw=1.1, zorder=3)
-    ax.set_yticks(range(len(st)), st["label"], fontsize=7.8)
-    ax.set_xlim(0.25, 0.95)
-    ax.set_xticks([0.3, 0.5, 0.7, 0.9])
-    strip_y(ax)
-    S.vgrid(ax)
-    ax.set_title("b  Aromatic stacking", fontsize=9.6)
-    ax.set_xlabel("AUROC", fontsize=8.5)
-    ax.text(0, -0.155, f"best {st['AUROC'].max():.2f}; 13 readouts tested",
-            transform=ax.transAxes, fontsize=7.4, color=S.MUTED, va="top")
-
-    ax = fig.add_subplot(gs[2])
-    for i, r in ryk.iterrows():
-        dot(ax, r["RYKTEL_sum"], i, S.VARIANT_CLASS[r["variant"]], s=46)
-    d = ryk[ryk["class"] == "del"]["RYKTEL_sum"].mean()
-    n = ryk[ryk["class"] == "neu"]["RYKTEL_sum"].mean()
-    ax.axvline(d, color=S.DEL, lw=1, alpha=0.85, zorder=1)
-    ax.axvline(n, color=S.NEU, lw=1, alpha=0.85, zorder=1)
-    ax.set_yticks(range(len(ryk)), ryk["variant"], fontsize=8)
-    strip_y(ax)
-    S.vgrid(ax)
-    ax.set_title("c  RYKTEL-region contacts", fontsize=9.6)
-    ax.set_xlabel("RNA contacts, residues 153–158", fontsize=8.5)
-    ax.text(0, -0.155, f"deleterious {d:.2f} > neutral {n:.2f}:\nthe wrong direction",
-            transform=ax.transAxes, fontsize=7.4, color=S.MUTED, va="top", linespacing=1.35)
-    S.save(fig, "figM5_mechanism_checks")
-    table("Aromatic stacking AUROCs", st[["label", "AUROC"]])
-    table("RYKTEL-region RNA contacts", ryk[["variant", "class", "RYKTEL_sum"]])
+def stacking_table(stack: pd.DataFrame) -> pd.DataFrame:
+    used = stack[stack["used"]]
+    gen = used[used["genuine"]].groupby("label")[STACKING].mean()
+    allr = used.groupby("label")[STACKING].mean()
+    t = pd.DataFrame([{"readout": c, "AUROC_genuine": auroc(gen[c].to_dict(), -1),
+                       "AUROC_published": auroc(allr[c].to_dict(), -1)} for c in STACKING])
+    t["exact_p_genuine"] = t["AUROC_genuine"].map(exact_p)
+    t["wt_stacked_runs"] = [f"{(used.loc[used['wt_protein'], c] > 0.5).sum()}"
+                            f"/{used['wt_protein'].sum()}" for c in STACKING]
+    table("Aromatic stacking readouts (13): genuine runs vs as first computed", t)
+    return t
 
 
 # ══════════════════════════════════════════════════════════════════════════
 #  Conclusions
 # ══════════════════════════════════════════════════════════════════════════
-def fig_n8_ceiling(t156: float, af3_iptm: float) -> int:
+def fig_n8_ceiling(af3_iptm: float, md_best: float) -> tuple[int, int]:
     p53 = tail_p(5, 3)
     ks = np.arange(8, 16)
     bonf = 0.05 / N_FEATURES_SCREENED
+    ref = 0.80
 
     fig = plt.figure(figsize=(8.6, 4.9))
     gs = fig.add_gridspec(1, 2, width_ratios=[1, 1.15], left=0.085, right=0.975,
@@ -631,7 +639,7 @@ def fig_n8_ceiling(t156: float, af3_iptm: float) -> int:
     S.header(fig, "Eight labeled variants cannot carry a significant result",
              f"Exact Mann–Whitney null for 5 deleterious vs 3 neutral: 56 equally likely "
              f"rankings. Even a perfect ranking gives p = {p53[15]:.3f},\nwell above the "
-             f"Bonferroni bar for {N_FEATURES_SCREENED} screened features "
+             f"Bonferroni bar for the {N_FEATURES_SCREENED} readouts tested "
              f"(0.05 / {N_FEATURES_SCREENED} = {bonf:.4f}).")
 
     ax = fig.add_subplot(gs[0])
@@ -639,12 +647,12 @@ def fig_n8_ceiling(t156: float, af3_iptm: float) -> int:
     ax.axhline(0.05, color=S.INK2, lw=0.9)
     ax.axhline(bonf, color=S.INK, lw=0.9)
     ax.text(0.508, 0.05 * 1.12, "p = 0.05", fontsize=7.6, color=S.INK2, va="bottom")
-    ax.text(0.508, bonf * 1.12, f"Bonferroni, {N_FEATURES_SCREENED} features", fontsize=7.6,
+    ax.text(0.508, bonf * 1.12, f"Bonferroni, {N_FEATURES_SCREENED} readouts", fontsize=7.6,
             color=S.INK, va="bottom")
     ax.text(0.508, bonf / 1.3, "unreachable at n = 8", fontsize=7.6, color=S.MUTED, va="top")
     ax.plot(ks / 15, p53[ks], color=S.INK2, lw=1.4, zorder=2, drawstyle="steps-mid", alpha=0.35)
     ax.scatter(ks / 15, p53[ks], s=22, color=S.INK2, zorder=3, edgecolors=S.SURFACE, lw=1)
-    for val, c in [(af3_iptm, S.AF3), (t156, S.MD), (1.0, S.INK)]:
+    for val, c in [(af3_iptm, S.AF3), (md_best, S.MD), (1.0, S.INK)]:
         ax.scatter(val, p53[int(round(val * 15))], s=60, color=c, zorder=4,
                    edgecolors=S.SURFACE, lw=1.3)
     ax.text(1.0 - 0.025, p53[15], f"perfect\np = {p53[15]:.3f}", ha="right", va="center",
@@ -652,7 +660,8 @@ def fig_n8_ceiling(t156: float, af3_iptm: float) -> int:
     keys = [Line2D([], [], ls="", marker="o", markersize=7, markerfacecolor=c,
                    markeredgecolor=S.SURFACE,
                    label=f"{lab}: {val:.3f}, p = {p53[int(round(val * 15))]:.3f}")
-            for val, lab, c in [(af3_iptm, "AF3 pair-ipTM", S.AF3), (t156, "T156 (MD)", S.MD)]]
+            for val, lab, c in [(af3_iptm, "AF3 pair-ipTM", S.AF3),
+                                (md_best, "MD, aromatic stacking", S.MD)]]
     ax.legend(handles=keys, loc="center left", bbox_to_anchor=(0.0, 0.4), fontsize=7.6,
               handletextpad=0.2, borderaxespad=0.3)
     ax.set_yscale("log")
@@ -674,14 +683,15 @@ def fig_n8_ceiling(t156: float, af3_iptm: float) -> int:
             fontsize=7.6, color=S.INK)
     ax.text(60.5, crit_u[-1] - 0.012, "needed for p < 0.05", ha="right", va="top",
             fontsize=7.6, color=S.INK2)
-    ax.axhline(t156, color=S.MD, lw=1.4)
-    ax.text(60.5, t156 + 0.008, f"observed T156, {t156:.3f}", ha="right", va="bottom",
+    ax.axhline(ref, color=S.MUTED, lw=1.2)
+    ax.text(60.5, ref + 0.008, f"a solid effect, AUROC {ref:.2f}", ha="right", va="bottom",
             fontsize=7.8, color=S.INK)
-    need = int(next(2 * k for k, c in zip(per_class, crit_b) if c <= t156))
-    ax.scatter(need, t156, s=60, color=S.MD, edgecolors=S.SURFACE, lw=1.3, zorder=4)
-    ax.annotate(f"≈ {need} variants ({need // 2} + {need // 2})\nto clear Bonferroni\n"
-                f"at the observed effect", xy=(need, t156), xytext=(need + 3, t156 + 0.075),
-                ha="left", va="bottom", fontsize=7.8, color=S.INK, linespacing=1.3,
+    need = int(next(2 * k for k, c in zip(per_class, crit_b) if c <= ref))
+    need_u = int(next(2 * k for k, c in zip(per_class, crit_u) if c <= ref))
+    ax.scatter(need, ref, s=60, color=S.INK, edgecolors=S.SURFACE, lw=1.3, zorder=4)
+    ax.annotate(f"≈ {need} variants ({need // 2} + {need // 2})\nto clear Bonferroni",
+                xy=(need, ref), xytext=(need + 3, ref + 0.075), ha="left", va="bottom",
+                fontsize=7.8, color=S.INK, linespacing=1.3,
                 arrowprops=dict(arrowstyle="-", color=S.MUTED, lw=0.7, shrinkA=2, shrinkB=4))
     ax.axvline(8, color=S.MUTED, lw=0.8)
     ax.text(8.8, 0.56, "this study:\n8 variants", fontsize=7.6, color=S.MUTED, va="bottom")
@@ -694,25 +704,30 @@ def fig_n8_ceiling(t156: float, af3_iptm: float) -> int:
     S.save(fig, "figC1_n8_ceiling")
     table("Exact one-sided p for 5 vs 3", pd.DataFrame(
         {"pairs_correct": ks, "AUROC": ks / 15, "p": p53[ks]}), floatfmt=(".0f", ".3f", ".4f"))
-    table("Minimum AUROC by design size (balanced)", pd.DataFrame(
-        {"variants_total": 2 * per_class, "AUROC_p<0.05": crit_u,
-         f"AUROC_p<0.05/{N_FEATURES_SCREENED}": crit_b}), floatfmt=(".0f", ".3f", ".3f"))
-    return need
+    table(f"Minimum AUROC by design size (balanced; {N_FEATURES_SCREENED} readouts)",
+          pd.DataFrame({"variants_total": 2 * per_class, "AUROC_p<0.05": crit_u,
+                        f"AUROC_p<0.05/{N_FEATURES_SCREENED}": crit_b}),
+          floatfmt=(".0f", ".3f", ".3f"))
+    return need, need_u
 
 
-def fig_forking_paths(af3: pd.DataFrame, t156_std: float) -> None:
-    def window(n_ns: str) -> float:
+def fig_forking_paths(af3: pd.DataFrame, t156: pd.DataFrame, screen: pd.DataFrame) -> None:
+    def window(n_ns: str) -> float:  # the expanse_orig runs (genuine), resSeq 6 = T156
         h = pd.read_csv(MDA / f"hbonds_per_residue_common{n_ns}.csv", index_col=0)
-        return auroc(h.loc[6].to_dict(), -1)  # resSeq 6 = T156
+        return auroc(h.loc[6].to_dict(), -1)
 
-    multi = pd.read_csv(MDA / "auroc_no_c212a.csv").set_index("feature")["AUROC"]
+    used = t156[t156["used"] & t156["genuine"]]
+    first_run = used[used["source"] == "expanse_orig"].groupby("label")["f156_mean"].mean()
+    pooled = used.groupby("label")["f156_mean"].mean()
+    in_screen = screen.set_index("feature").loc["hbond_RNA_F156", "AUROC_genuine"]
     top = af3[af3["model"] == 0].groupby("variant").mean(numeric_only=True)
     allm = af3.groupby("variant").mean(numeric_only=True)
     paths = [
         ("MD", "T156 · 1 run per variant, first 139 ns", window("139")),
         ("MD", "T156 · 1 run per variant, first 269 ns", window("269")),
-        ("MD", "T156 · 2–4 runs, 200 ns, 0.1 ns sampling", multi["hbond_RNA_F156"]),
-        ("MD", "T156 · 2–4 runs, 200 ns, 1 ns sampling, ≥ 180 ns", t156_std),
+        ("MD", "T156 · 1 run per variant, 200 ns, every 1 ns", auroc(first_run.to_dict(), -1)),
+        ("MD", "T156 · 1–2 runs per variant, every 1 ns", auroc(pooled.to_dict(), -1)),
+        ("MD", "T156 · 1–2 runs per variant, 50 frames per run", in_screen),
         ("AF3", "pair-ipTM · mean of all 40 models",
          auroc(allm["pair_ipTM_protein_rna"].to_dict(), -1)),
         ("AF3", "pair-ipTM · top-ranked model per seed",
@@ -721,12 +736,13 @@ def fig_forking_paths(af3: pd.DataFrame, t156_std: float) -> None:
         ("AF3", "min pLDDT · top-ranked model per seed", auroc(top["pLDDT_min"].to_dict(), -1)),
     ]
     crit = critical_auroc(5, 3, 0.05)
-    fig, ax = plt.subplots(figsize=(8.6, 4.6))
-    fig.subplots_adjust(left=0.43, right=0.96, top=S.top(fig, 1.5), bottom=0.62 / 4.6)
+    n_md = sum(1 for m, *_ in paths if m == "MD")
+    fig, ax = plt.subplots(figsize=(8.6, 4.9))
+    fig.subplots_adjust(left=0.43, right=0.96, top=S.top(fig, 1.5), bottom=0.62 / 4.9)
     S.header(fig, "Reasonable analysis choices move the answer more than biology does",
-             "Same eight labeled variants, AUROC under defensible alternatives. Both values "
-             "that look significant rest on a fragile\nchoice: a 139 ns window, or the "
-             "confidence of the floppy C-terminal residue.")
+             "Same eight labeled variants and genuine runs only. Both values that look "
+             "significant rest on a fragile choice:\na 139 ns window, or the confidence of "
+             "the floppy C-terminal residue.")
     legend(fig, [(S.MD, "o", "MD, T156–RNA H-bonds"), (S.AF3, "o", "AlphaFold 3 confidence")],
            top_in=1.0)
     significance_band(ax, crit)
@@ -738,43 +754,51 @@ def fig_forking_paths(af3: pd.DataFrame, t156_std: float) -> None:
         c = S.AF3 if meth == "AF3" else S.MD
         ax.plot([0.5, val], [y, y], color=c, lw=1.4, alpha=0.55, solid_capstyle="butt")
         ax.scatter(val, y, s=46, color=c, edgecolors=S.SURFACE, lw=1.2, zorder=3)
-        ax.text(val + 0.015, y, f"{val:.3f}", va="center", fontsize=8.2, color=S.INK)
-    ax.axhline(3.5, color=S.GRID, lw=0.8)
+        right = val >= 0.5
+        ax.text(val + (0.015 if right else -0.015), y, f"{val:.3f}", va="center",
+                ha="left" if right else "right", fontsize=8.2, color=S.INK)
+    ax.axhline(len(paths) - n_md - 0.5, color=S.GRID, lw=0.8)
     ax.set_yticks(ys, [lab for _, lab, _ in paths])
     strip_y(ax)
-    ax.set_xlim(0.45, 1.02)
+    ax.set_xlim(0.15, 1.02)
     ax.set_ylim(-0.6, len(paths) - 0.4)
     ax.set_xlabel("AUROC, 5 deleterious vs 3 neutral")
     S.vgrid(ax)
     S.save(fig, "figC2_forking_paths")
-    table("AUROC under alternative analysis choices",
+    table("AUROC under alternative analysis choices (genuine runs)",
           pd.DataFrame(paths, columns=["method", "analysis", "AUROC"]))
 
 
 def main() -> None:
     S.apply()
     af3 = load_af3()
-    reps = load_t156_reps()
-    used = reps[reps["used"]]
-    t156_std = auroc(used.groupby("variant")["f156_mean"].mean().to_dict(), -1)
+    t156 = load_t156_runs()
+    stack = load_stacking_runs()
+    used = t156[t156["used"]]
+    assert used["wt_protein"].sum() == 19 and (used["genuine"] & (used["label"] != "WT")).sum() == 14
     af3_iptm = auroc(af3.groupby("variant")["pair_ipTM_protein_rna"].mean().to_dict(), -1)
-    assert abs(t156_std - 0.8) < 1e-9 and abs(af3_iptm - 11 / 15) < 1e-9
+    assert abs(af3_iptm - 11 / 15) < 1e-9
 
     fig_structure()
     fig_af3_confidence(af3)
     fig_af3_rna_control(af3)
-    fig_md_sampling(reps)
-    fig_auroc_ranking(t156_std)
-    fig_t156_replicates(reps)
-    fig_t156_convergence(reps)
-    fig_mechanism_checks()
-    need = fig_n8_ceiling(t156_std, af3_iptm)
-    fig_forking_paths(af3, t156_std)
+    fig_md_sampling(t156)
+    screen = screen_table()
+    fig_auroc_ranking(screen)
+    noise = fig_md_vs_wt_noise(t156, stack)
+    st = stacking_table(stack)
+    md_best = st["AUROC_genuine"].max()
+    assert abs(noise["t156"][0] - 4 / 15) < 1e-9 and abs(md_best - 14 / 15) < 1e-9
+    need, need_u = fig_n8_ceiling(af3_iptm, md_best)
+    fig_forking_paths(af3, t156, screen)
     (FIGDATA / "tables.md").write_text(
         "# Numbers behind the figures\n\nGenerated by figures/src/make_figures.py.\n\n"
         + "\n".join(TABLES))
-    print(f"T156 standardized AUROC {t156_std:.3f}; AF3 pair-ipTM {af3_iptm:.3f}; "
-          f"variants needed for Bonferroni at observed effect: {need}")
+    print(f"AF3 pair-ipTM {af3_iptm:.3f}; T156 genuine {noise['t156'][0]:.3f} "
+          f"(WT-noise p {noise['t156'][1]:.2f}); stacking genuine {noise['stacking'][0]:.3f} "
+          f"(WT-noise p {noise['stacking'][1]:.3f}); best screen MD "
+          f"{screen[screen['method'] == 'MD']['AUROC_genuine'].max():.3f}; variants needed for "
+          f"AUROC 0.80: {need_u} uncorrected, {need} after Bonferroni({N_FEATURES_SCREENED})")
 
 
 if __name__ == "__main__":

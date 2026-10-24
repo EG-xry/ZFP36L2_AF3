@@ -32,7 +32,7 @@ AlphaFold 3 plays two roles in this project. It supplies the starting structure 
 
 † The construct names come from the project's sources; the mutation column is what each AF3 job actually contains, read from its input sequence (residue = construct position + 150).
 
-In total: 90 server jobs and 450 models. The top-ranked model per variant, by AF3 ranking score across all eight seeds, became the MD starting structure (`anvil_md/best_models/best_model_selection.csv`).
+In total: 90 server jobs and 450 models. The top-ranked model per variant, by AF3 ranking score across all eight seeds, became the MD starting structure (`anvil_md/best_models/best_model_selection.csv`). On Anvil, a job-script error started every replicate from the wild-type structure instead; see [MD results](02_MD_results.md#what-was-actually-simulated).
 
 ## Confidence barely moves
 

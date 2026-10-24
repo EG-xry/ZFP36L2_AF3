@@ -25,7 +25,7 @@ WIDTH, HEIGHT = 2400, 1500
 
 # Palette (figures/src/style.py)
 COLORS = {
-    "del": "0xeb6834", "neu": "0x2a78d6", "zn_ctrl": "0x898781", "t156": "0x008300",
+    "del": "0xeb6834", "neu": "0x2a78d6", "zn_ctrl": "0x898781",
     "protein": "0xd8d6cf", "finger1": "0xc9d3df", "finger2": "0xdcd3c4",
     "rna": "0x3b3a37", "zn": "0xdfe2e6",
 }
@@ -35,7 +35,7 @@ SITES = [
     ("Y154H", 154, "del"), ("R160W", 160, "del"), ("R184C", 184, "del"),
     ("G204D", 204, "del"), ("C206F", 206, "del"),
     ("S185N", 185, "neu"), ("T187S", 187, "neu"), ("D210E", 219, "neu"),
-    ("C208A", 212, "zn_ctrl"), ("T156", 156, "t156"),
+    ("C208A", 212, "zn_ctrl"),
 ]
 ZN_LIGANDS = [159, 168, 174, 178, 197, 206, 212, 216]
 
@@ -78,10 +78,7 @@ def style() -> None:
         sel = f"chain A and resi {resi} and name CA"
         cmd.show("spheres", sel)
         cmd.set("sphere_scale", 0.95, sel)
-        cmd.color(cls if cls != "t156" else "t156", sel)
-    cmd.show("sticks", "chain A and resi 156 and not name N+C+O")
-    cmd.color("t156", "chain A and resi 156 and not name N+C+O")
-    cmd.set("stick_radius", 0.22, "chain A and resi 156")
+        cmd.color(cls, sel)
 
     cmd.set("ray_trace_mode", 1)
     cmd.set("ray_trace_color", "0x52514e")
