@@ -9,12 +9,24 @@ Both pairs pass the all-pairs CVD and normal-vision checks on a white card.
 """
 from __future__ import annotations
 
+import re
 from pathlib import Path
+from xml.etree import ElementTree as ET
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
 
 FIG_DIR = Path(__file__).resolve().parents[1]
+
+SVG_NS = "http://www.w3.org/2000/svg"
+XLINK_HREF = "{http://www.w3.org/1999/xlink}href"
+for _prefix, _uri in [("", SVG_NS), ("xlink", "http://www.w3.org/1999/xlink"),
+                      ("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"),
+                      ("cc", "http://creativecommons.org/ns#"),
+                      ("dc", "http://purl.org/dc/elements/1.1/")]:
+    ET.register_namespace(_prefix, _uri)
+_NUM = re.compile(r"[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?")
 
 # ── Ink & chrome ──────────────────────────────────────────────────────────
 SURFACE = "#ffffff"
@@ -55,12 +67,17 @@ VARIANT_CLASS = {"WT": "WT", "C208A": "zn_ctrl",
 DISPLAY_ORDER = ["WT", *DELETERIOUS, *NEUTRAL, "C208A"]
 
 
+FONT = "Source Sans 3"  # figures/fonts, SIL Open Font License
+
+
 def apply() -> None:
     """Install the shared rcParams."""
+    for ttf in sorted((FIG_DIR / "fonts").glob("*.ttf")):
+        font_manager.fontManager.addfont(str(ttf))
     mpl.rcParams.update({
         "font.family": "sans-serif",
-        # Arial ships a real bold face; matplotlib only sees regular Helvetica (.ttc).
-        "font.sans-serif": ["Arial", "Helvetica Neue", "Helvetica", "DejaVu Sans"],
+        "font.sans-serif": [FONT, "Arial", "DejaVu Sans"],
+        "axes.unicode_minus": False,  # plain hyphen for negative numbers
         "font.size": 9.5,
         "text.color": INK,
         "axes.facecolor": SURFACE,
@@ -69,7 +86,7 @@ def apply() -> None:
         "axes.edgecolor": AXIS,
         "axes.linewidth": 0.8,
         "axes.labelcolor": INK2,
-        "axes.labelsize": 9.5,
+        "axes.labelsize": 10,
         "axes.titlesize": 10.5,
         "axes.titleweight": "bold",
         "axes.titlecolor": INK,
@@ -85,22 +102,22 @@ def apply() -> None:
         "ytick.color": AXIS,
         "xtick.labelcolor": INK2,
         "ytick.labelcolor": INK2,
-        "xtick.labelsize": 8.5,
-        "ytick.labelsize": 8.5,
+        "xtick.labelsize": 9,
+        "ytick.labelsize": 9,
         "xtick.major.size": 3,
         "ytick.major.size": 3,
         "xtick.major.width": 0.8,
         "ytick.major.width": 0.8,
         "legend.frameon": False,
-        "legend.fontsize": 8.5,
+        "legend.fontsize": 9,
         "legend.labelcolor": INK2,
         "lines.linewidth": 1.5,
         "lines.solid_capstyle": "round",
         "lines.solid_joinstyle": "round",
         "mathtext.fontset": "custom",
-        "mathtext.rm": "Arial",
-        "mathtext.it": "Arial:italic",
-        "mathtext.bf": "Arial:bold",
+        "mathtext.rm": FONT,
+        "mathtext.it": f"{FONT}:italic",
+        "mathtext.bf": f"{FONT}:bold",
         "svg.fonttype": "none",
         "svg.hashsalt": "zfp36l2",
         "figure.dpi": 110,
@@ -127,20 +144,142 @@ def top(fig, inches: float) -> float:
     return 1 - inches / fig.get_figheight()
 
 
-def header(fig, title: str, subtitle: str | None = None) -> None:
-    """Left-aligned title + takeaway; occupies the top ~0.85 in."""
-    fig.text(0.012, top(fig, 0.12), title, ha="left", va="top", fontsize=13.5,
+def header(fig, title: str) -> None:
+    """Short left-aligned title; the caption in the write-up carries the explanation."""
+    fig.text(0.012, top(fig, 0.12), title, ha="left", va="top", fontsize=13,
              fontweight="bold", color=INK)
-    if subtitle:
-        fig.text(0.012, top(fig, 0.45), subtitle, ha="left", va="top",
-                 fontsize=10, color=INK2, linespacing=1.4)
+
+
+def _tag(el) -> str:
+    return el.tag.rsplit("}", 1)[-1]
+
+
+def _style(el) -> dict:
+    pairs = (p.split(":", 1) for p in (el.get("style") or "").split(";") if ":" in p)
+    return {k.strip(): v.strip() for k, v in pairs}
+
+
+def _bbox(el) -> tuple[float, float, float, float] | None:
+    """Bounding box of a shape or group in its own user space; None if not computable."""
+    if el.get("transform") and _tag(el) != "path":
+        return None
+    boxes = []
+    for e in el.iter():
+        tag = _tag(e)
+        if tag == "g":
+            if e.get("transform"):
+                return None
+            continue
+        if tag == "path":
+            nums = [float(n) for n in _NUM.findall(e.get("d", ""))]
+            if not nums or len(nums) % 2:
+                return None
+            xs, ys = nums[0::2], nums[1::2]
+        elif tag == "rect":
+            x, y = float(e.get("x", 0)), float(e.get("y", 0))
+            xs, ys = [x, x + float(e.get("width"))], [y, y + float(e.get("height"))]
+        else:
+            return None
+        tx = ty = 0.0
+        if e.get("transform"):
+            m = re.fullmatch(r"translate\(([^ ,]+)[ ,]+([^ )]+)\)", e.get("transform").strip())
+            if not m or e is el:
+                return None
+            tx, ty = float(m[1]), float(m[2])
+        st = _style(e)  # strokes reach half their width past the path (round joins and caps)
+        pad = float(st.get("stroke-width", "1").rstrip("px")) / 2 if st.get("stroke", "none") != "none" else 0
+        boxes.append((min(xs) + tx - pad, min(ys) + ty - pad, max(xs) + tx + pad, max(ys) + ty + pad))
+    if not boxes:
+        return None
+    return (min(b[0] for b in boxes), min(b[1] for b in boxes),
+            max(b[2] for b in boxes), max(b[3] for b in boxes))
+
+
+def make_editable(svg_path: Path) -> None:
+    """Rewrite a matplotlib SVG so each shape is its own element in a vector editor.
+
+    Inlines every <use> clone (markers, ticks) as a real <path>, drops clipping masks
+    from shapes that lie inside them anyway (images keep theirs), and unwraps wrapper
+    groups that hold a single element or have no name.
+    """
+    tree = ET.parse(svg_path)
+    root = tree.getroot()
+    parents = {c: p for p in root.iter() for c in p}
+    defs = {el.get("id"): el for d in root.iter(f"{{{SVG_NS}}}defs") for el in d if el.get("id")}
+    for use in list(root.iter(f"{{{SVG_NS}}}use")):
+        ref = defs[(use.get(XLINK_HREF) or use.get("href"))[1:]]
+        new = ET.Element(ref.tag, {k: v for k, v in ref.attrib.items() if k not in ("id", "style")})
+        style = {**_style(ref), **_style(use)}
+        if style:
+            new.set("style", "; ".join(f"{k}: {v}" for k, v in style.items()))
+        x, y = float(use.get("x", 0)), float(use.get("y", 0))
+        if x or y:
+            new.set("transform", f"translate({x:g} {y:g})")
+        if use.get("clip-path"):
+            new.set("clip-path", use.get("clip-path"))
+        new.tail = use.tail
+        parent = parents[use]
+        parent[list(parent).index(use)] = new
+        parents[new] = parent
+
+    clips = {}
+    for cp in root.iter(f"{{{SVG_NS}}}clipPath"):
+        r = cp.find(f"{{{SVG_NS}}}rect")
+        if r is not None:
+            x, y = float(r.get("x")), float(r.get("y"))
+            clips[cp.get("id")] = (x, y, x + float(r.get("width")), y + float(r.get("height")))
+    for el in root.iter():
+        box = clips.get((el.get("clip-path") or "")[5:-1])
+        bb = _bbox(el) if box else None
+        tol = 1.0  # pt; an overhang this small cannot be seen
+        if bb and bb[0] >= box[0] - tol and bb[1] >= box[1] - tol \
+                and bb[2] <= box[2] + tol and bb[3] <= box[3] + tol:
+            del el.attrib["clip-path"]
+        if _tag(el) == "text" and re.fullmatch(r"rotate\(-?0 \S+ \S+\)", el.get("transform", "")):
+            del el.attrib["transform"]
+
+    used = set()
+    for el in root.iter():
+        for v in el.attrib.values():
+            used.update(re.findall(r"url\(#([^)]+)\)", v))
+        if (el.get(XLINK_HREF) or "").startswith("#"):
+            used.add(el.get(XLINK_HREF)[1:])
+    for d in list(root.iter(f"{{{SVG_NS}}}defs")):
+        for el in list(d):
+            if el.get("id") and el.get("id") not in used:
+                d.remove(el)
+
+    def unwrap(el) -> None:
+        out = []
+        for child in list(el):
+            unwrap(child)
+            plain = _tag(child) == "g" and not set(child.attrib) - {"id"}
+            kids = list(child)
+            if _tag(child) == "defs" and not kids:
+                continue
+            if plain and len(kids) == 1:
+                if child.get("id") and not kids[0].get("id"):
+                    kids[0].set("id", child.get("id"))
+                kids[0].tail = child.tail
+                out.append(kids[0])
+            elif plain and not child.get("id"):
+                out.extend(kids)
+            else:
+                out.append(child)
+        for child in list(el):
+            el.remove(child)
+        el.extend(out)
+
+    unwrap(root)
+    tree.write(svg_path, encoding="utf-8", xml_declaration=True)
 
 
 def save(fig, name: str, dpi: int = 220) -> None:
-    """Write figures/<name>.svg (editable text) and figures/<name>.png."""
+    """Write figures/<name>.svg (every element editable) and figures/<name>.png."""
     svg_path = FIG_DIR / f"{name}.svg"
     png_path = FIG_DIR / f"{name}.png"
     fig.savefig(svg_path, dpi=dpi, metadata={"Date": None})  # dpi sets embedded image resolution
+    make_editable(svg_path)
     fig.savefig(png_path, dpi=dpi)
     plt.close(fig)
     print(f"  wrote {svg_path.name} + {png_path.name}")

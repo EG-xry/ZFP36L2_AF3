@@ -107,10 +107,10 @@ Runs needed to pin a T156 mean within ±0.05 (95% CI): 13
 
 | label                      | method   |   AUROC_variant_runs |   AUROC_pooled | column in analysis CSVs   |
 |:---------------------------|:---------|---------------------:|---------------:|:--------------------------|
-| Protein–RNA Coulomb energy | MD       |                0.733 |          0.667 | coulomb_prot_rna          |
-| Protein–RNA salt bridges   | MD       |                0.733 |          0.667 | salt_bridges_prot_rna     |
+| Protein-RNA Coulomb energy | MD       |                0.733 |          0.667 | coulomb_prot_rna          |
+| Protein-RNA salt bridges   | MD       |                0.733 |          0.667 | salt_bridges_prot_rna     |
 | Y170 H-bonds               | MD       |                0.733 |          0.600 | hbond_RNA_H170            |
-| pair-ipTM (protein–RNA)    | AF3      |                0.733 |          0.733 | pair_ipTM_protein_rna     |
+| pair-ipTM (protein-RNA)    | AF3      |                0.733 |          0.733 | pair_ipTM_protein_rna     |
 | Cross-chain PAE            | AF3      |                0.667 |          0.667 | pair_pae_min_cross_mean   |
 | Min pLDDT (residue E220)   | AF3      |                0.667 |          0.667 | pLDDT_min                 |
 | G171 H-bonds               | MD       |                0.667 |          0.667 | hbond_RNA_R171            |
@@ -118,7 +118,7 @@ Runs needed to pin a T156 mean within ±0.05 (95% CI): 13
 | RNA phosphate RMSD         | MD       |                0.667 |          0.400 | rmsd_rnaP_last20pct       |
 | Y154 H-bonds               | MD       |                0.600 |          0.667 | hbond_RNA_Y154            |
 | T156 H-bonds to RNA        | MD       |                0.533 |          0.867 | hbond_RNA_F156            |
-| Protein–RNA contacts       | MD       |                0.533 |          0.267 | contacts_last20pct        |
+| Protein-RNA contacts       | MD       |                0.533 |          0.267 | contacts_last20pct        |
 | Finger-2 RMSD              | MD       |                0.533 |          0.400 | rmsd_zf2_last20pct        |
 | pLDDT, finger 1            | AF3      |                0.533 |          0.533 | pLDDT_ZF1                 |
 | RMSD to WT model           | AF3      |                0.533 |          0.533 | RMSD_whole                |
@@ -236,8 +236,8 @@ Runs needed to pin a T156 mean within ±0.05 (95% CI): 13
 | MD       | T156 · 1 run per variant, first 139 ns         |   0.933 |
 | MD       | T156 · 1 run per variant, first 269 ns         |   0.533 |
 | MD       | T156 · 1 run per variant, 200 ns, every 1 ns   |   0.333 |
-| MD       | T156 · 1–2 runs per variant, every 1 ns        |   0.267 |
-| MD       | T156 · 1–2 runs per variant, 50 frames per run |   0.533 |
+| MD       | T156 · 1-2 runs per variant, every 1 ns        |   0.267 |
+| MD       | T156 · 1-2 runs per variant, 50 frames per run |   0.533 |
 | AF3      | pair-ipTM · mean of all 40 models              |   0.733 |
 | AF3      | pair-ipTM · top-ranked model per seed          |   0.633 |
 | AF3      | min pLDDT · mean of all 40 models              |   0.667 |

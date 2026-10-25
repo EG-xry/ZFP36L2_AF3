@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 572" width="1600" height="572" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 490" width="1600" height="490" font-family="'Source Sans 3', Arial, Helvetica, sans-serif">
   <title>ZFP36L2 construct 151-220: zinc fingers, motifs and variant sites</title>
   <desc>Figure A1 of the ZFP36L2_AF3 write-up. Hand-editable: residues, motifs, Zn coordination and variant sites are separate named groups.</desc>
-  <rect id="background" width="1600" height="572" rx="24" fill="#ffffff"/>
+  <rect id="background" width="1600" height="490" fill="#ffffff"/>
   <g id="header">
-    <text x="48.0" y="62.0" font-size="28" fill="#0b0b0b" font-weight="700">The construct: 70 residues, two CCCH zinc fingers</text>
-    <text x="48" y="96" font-size="17" fill="#52514e">ZFP36L2 residues 151–220 (NP_008818.3), submitted to AlphaFold 3 with the ARE 5′-UUAUUUAUU-3′ and two Zn<tspan dy="-6" font-size="11">2+</tspan><tspan dy="6">. Every variant is a single substitution in this window.</tspan></text>
+    <text x="48.0" y="62.0" font-size="28" fill="#0b0b0b" font-weight="700">AlphaFold 3 construct</text>
   </g>
+  <g id="body" transform="translate(0 -34)">
   <g id="legend">
     <circle cx="55" cy="138" r="7" fill="#eb6834"/>
     <text x="70.0" y="143.0" font-size="14" fill="#52514e">Deleterious (EMSA)</text>
@@ -236,8 +236,8 @@
     <line x1="230.0" y1="414" x2="638.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
     <circle cx="488.0" cy="414" r="10" fill="#dfe2e6" stroke="#8e8d88" stroke-width="1.4"/>
     <text x="488.0" y="442" font-size="13" fill="#52514e" text-anchor="middle">Zn<tspan dy="-5" font-size="9">2+</tspan></text>
-    <text x="434.2" y="472.0" font-size="15" fill="#0b0b0b" font-weight="700" text-anchor="middle">Zinc finger 1  (159–178)</text>
-    <text x="434.2" y="492.0" font-size="12.5" fill="#898781" text-anchor="middle">C159–X8–C168–X5–C174–X3–H178</text>
+    <text x="434.2" y="472.0" font-size="15" fill="#0b0b0b" font-weight="700" text-anchor="middle">Zinc finger 1  (159-178)</text>
+    <text x="434.2" y="492.0" font-size="12.5" fill="#898781" text-anchor="middle">C159-X8-C168-X5-C174-X3-H178</text>
     <line x1="1047.0" y1="362" x2="1047.0" y2="414" stroke="#52514e" stroke-width="1.4"/>
     <line x1="1240.5" y1="362" x2="1240.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
     <line x1="1369.5" y1="362" x2="1369.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
@@ -245,11 +245,9 @@
     <line x1="1047.0" y1="414" x2="1455.5" y2="414" stroke="#52514e" stroke-width="1.4"/>
     <circle cx="1305.0" cy="414" r="10" fill="#dfe2e6" stroke="#8e8d88" stroke-width="1.4"/>
     <text x="1305.0" y="442" font-size="13" fill="#52514e" text-anchor="middle">Zn<tspan dy="-5" font-size="9">2+</tspan></text>
-    <text x="1251.2" y="472.0" font-size="15" fill="#0b0b0b" font-weight="700" text-anchor="middle">Zinc finger 2  (197–216)</text>
-    <text x="1251.2" y="492.0" font-size="12.5" fill="#898781" text-anchor="middle">C197–X8–C206–X5–C212–X3–H216</text>
+    <text x="1251.2" y="472.0" font-size="15" fill="#0b0b0b" font-weight="700" text-anchor="middle">Zinc finger 2  (197-216)</text>
+    <text x="1251.2" y="492.0" font-size="12.5" fill="#898781" text-anchor="middle">C197-X8-C206-X5-C212-X3-H216</text>
     <text x="842.8" y="472.0" font-size="14" fill="#898781" text-anchor="middle">linker</text>
   </g>
-  <g id="footnote">
-    <text x="48.0" y="546.0" font-size="13" fill="#898781">† Names follow Akçeşme et al. 2025. In this construct numbering the AF3 jobs mutate C212 (a finger-2 zinc ligand, used as the knockout control) and D219 (the C-terminal tail).</text>
   </g>
 </svg>

@@ -22,6 +22,8 @@ Structure prediction followed by simulation is often presented as a way to triag
   <img src="../figures/figC1_n8_ceiling.png" alt="Left: exact p-value for every attainable AUROC with 5 vs 3 variants; even a perfect ranking gives p = 0.018, above the Bonferroni line for 45 readouts. Right: minimum AUROC needed versus number of validated variants; an AUROC of 0.80 needs about 36 variants to clear Bonferroni." width="100%">
 </p>
 
+**The n = 8 ceiling.** **a**, Exact one-sided p for every AUROC that five deleterious and three neutral variants allow (56 equally likely rankings); colored dots mark AF3 pair-ipTM and MD aromatic stacking. Even a perfect ranking gives p = 0.018, above the Bonferroni bar for the 45 readouts tested (0.05/45 = 0.0011). **b**, Minimum AUROC that reaches p < 0.05, uncorrected and after Bonferroni, against the number of validated variants (half deleterious, half neutral).
+
 Five deleterious and three neutral variants can be ranked in only 56 distinct ways. A perfect ranking is one of them, so its p-value is 1/56 = 0.018. The project tested 45 readouts, which puts the Bonferroni bar at 0.0011. That bar lies below anything eight variants can produce. More runs, longer trajectories, or a better readout cannot change this arithmetic.
 
 Panel b turns the question around and asks how many validated variants a solid effect, AUROC 0.80, would need:
@@ -35,13 +37,15 @@ Panel b turns the question around and asks how many validated variants a solid e
   <img src="../figures/figC2_forking_paths.png" alt="AUROC under defensible analysis choices on variant runs: T156 at 0.933, 0.533, 0.333, 0.267 and 0.533 depending on window, runs and sampling; AF3 pair-ipTM at 0.733 or 0.633 and min pLDDT at 0.667 or 0.933 depending on model pooling." width="100%">
 </p>
 
+**AUROC under different analysis choices.** The same eight labeled variants, variant runs only, scored under choices that could each be defended in a methods section; green, MD T156-RNA hydrogen bonds; violet, AF3 confidence. The shaded band marks p < 0.05 uncorrected. Both values that look significant rest on a fragile choice: a 139 ns window, or the confidence of the floppy C-terminal residue.
+
 Every row of this figure uses the same eight variants, only variant runs, and a choice I could defend in a methods section.
 
 - **Window length.** The first Expanse run of each variant gives 0.933 over its first 139 ns, 0.533 over 269 ns, and 0.333 over 200 ns at 1 ns sampling. Had I stopped at 139 ns, I would have reported a nominally significant result.
 - **Runs and sampling.** Pooling each variant's one or two runs gives 0.267 at 1 ns sampling and 0.533 when each run is sampled at 50 frames.
 - **Model pooling in AF3.** Averaging all 40 models gives pair-ipTM 0.733; using each seed's top model gives 0.633. The same switch lifts min pLDDT from 0.667 to 0.933, a number that measures the disordered C-terminal residue.
 
-With only 15 deleterious–neutral pairs, one pair changing order moves the AUROC by 0.067. Analysis choices that look minor can therefore produce, or erase, an apparent result. This is the garden of forking paths in miniature (Gelman and Loken 2014). The honest response is to fix one analysis before looking.
+With only 15 deleterious-neutral pairs, one pair changing order moves the AUROC by 0.067. Analysis choices that look minor can therefore produce, or erase, an apparent result. This is the garden of forking paths in miniature (Gelman and Loken 2014). The honest response is to fix one analysis before looking.
 
 ## Why I paused
 
@@ -67,6 +71,6 @@ Eight labeled variants could not answer the question I asked, but they did show 
 
 ## References
 
-- Akçeşme B, Hekimoğlu H, Chirasani VR, İş Ş, Atmaca HN, Waldern JM, Ramos SBV. Identification of deleterious non-synonymous single nucleotide polymorphisms in the mRNA decay activator ZFP36L2. *RNA Biology* 22(1):1–15 (2025). doi:10.1080/15476286.2024.2437590
-- Gelman A, Loken E. The statistical crisis in science. *American Scientist* 102(6), 460–465 (2014).
-- Mann HB, Whitney DR. On a test of whether one of two random variables is stochastically larger than the other. *Ann Math Stat* 18, 50–60 (1947).
+- Akçeşme B, Hekimoğlu H, Chirasani VR, İş Ş, Atmaca HN, Waldern JM, Ramos SBV. Identification of deleterious non-synonymous single nucleotide polymorphisms in the mRNA decay activator ZFP36L2. *RNA Biology* 22(1):1-15 (2025). doi:10.1080/15476286.2024.2437590
+- Gelman A, Loken E. The statistical crisis in science. *American Scientist* 102(6), 460-465 (2014).
+- Mann HB, Whitney DR. On a test of whether one of two random variables is stochastically larger than the other. *Ann Math Stat* 18, 50-60 (1947).

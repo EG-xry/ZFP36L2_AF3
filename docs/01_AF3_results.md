@@ -7,10 +7,12 @@ AlphaFold 3 plays two roles in this project. It supplies the starting structure 
 ## Inputs
 
 <p align="center">
-  <img src="../figures/figA1_construct_map.svg" alt="Sequence map of ZFP36L2 residues 151 to 220 with both CCCH zinc fingers, their zinc ligands, the RYKTEL and KYKTEL motifs, and every variant site." width="100%">
+  <img src="../figures/figA1_construct_map.png" alt="Sequence map of ZFP36L2 residues 151 to 220 with both CCCH zinc fingers, their zinc ligands, the RYKTEL and KYKTEL motifs, and every variant site." width="100%">
 </p>
 
-- **Protein:** ZFP36L2 residues 151–220 (NP_008818.3), the tandem zinc-finger domain. Each finger coordinates one zinc through a C-X8-C-X5-C-X3-H motif.
+**AlphaFold 3 construct.** ZFP36L2 residues 151-220 (NP_008818.3), submitted to AlphaFold 3 with the ARE 5′-UUAUUUAUU-3′ and two Zn²⁺. Each finger coordinates one zinc through a C-X8-C-X5-C-X3-H motif (connected residues); bars mark the RYKTEL and KYKTEL lead-ins. Every variant is a single substitution in this window, colored by EMSA label. † Names follow Akçeşme et al. 2025; in this construct numbering the AF3 jobs mutate C212 (a finger-2 zinc ligand, used as the knockout control) and D219 (the C-terminal tail).
+
+- **Protein:** ZFP36L2 residues 151-220 (NP_008818.3), the tandem zinc-finger domain. Each finger coordinates one zinc through a C-X8-C-X5-C-X3-H motif.
 - **RNA:** 5′-UUAUUUAUU-3′, the AU-rich nonamer that the same domain (TIS11d) binds in the NMR structure 1RGO (Hudson et al. 2004).
 - **Ions:** two Zn²⁺.
 - **Server settings:** AlphaFold Server with templates on; 8 seeds per construct (5 for the two constructs that never reached MD), 5 ranked models per seed.
@@ -40,9 +42,11 @@ In total: 90 server jobs and 450 models. The top-ranked model per variant, by AF
   <img src="../figures/figA2_af3_confidence.png" alt="Four panels of AF3 confidence per construct: pair-ipTM, cross-chain PAE, mean pLDDT and minimum pLDDT, with eight seeds per construct." width="100%">
 </p>
 
+**AlphaFold 3 confidence by construct.** Eight AF3 jobs per construct: small dots, one seed (mean of its five models); large dots, construct means; vertical line, wild type. The shaded band groups the deleterious variants. Above each panel are the direction counted as more confident and the AUROC for 5 deleterious vs 3 neutral variants. Only C206F, which removes a zinc ligand of finger 2, separates from the wild type on every metric.
+
 AF3 builds nearly the same complex for every variant, with nearly the same confidence:
 
-- **pair-ipTM** (confidence in the protein–RNA interface) spans 0.710–0.775 across all ten constructs; WT sits at 0.765.
+- **pair-ipTM** (confidence in the protein-RNA interface) spans 0.710-0.775 across all ten constructs; WT sits at 0.765.
 - **Mean pLDDT** stays between 95.4 and 97.0.
 - **C206F is the one clear outlier.** It replaces a zinc ligand of finger 2 and is lower on every metric: pair-ipTM 0.710, pLDDT 95.4, min pLDDT 66.6.
 - **R160W raises cross-chain PAE** (1.32 Å against 1.08 Å for WT) without moving pair-ipTM much.
@@ -62,6 +66,8 @@ As classifiers of the eight labeled variants (5 deleterious vs 3 neutral, constr
 <p align="center">
   <img src="../figures/figA3_af3_rna_control.png" alt="Dot plot of pair-ipTM: WT with a non-binding RNA near 0.38, WT with the ARE near 0.77, and all eight labeled variants clustered between 0.71 and 0.78." width="100%">
 </p>
+
+**AlphaFold 3 with a non-binding RNA.** pair-ipTM for the wild type with a non-binding nonamer (UACAAACAU; one seed, five models) and with the ARE (eight seeds, 40 models), and for the eight labeled variants with the ARE. Small dots are models and large dots means. Swapping the RNA halves pair-ipTM; point mutations move it a few hundredths, and deleterious and neutral variants overlap.
 
 To check that the confidence head can respond to binding at all, I ran the WT domain with 5′-UACAAACAU-3′, a nonamer listed as non-binding in the project's RNA probe notes (one seed, five models). pair-ipTM fell from 0.765 to 0.376. That drop is about six times the spread across all eight labeled variants (0.065). AF3 is therefore not blind to binding; it is blind to point mutations that weaken binding. That fits what it is trained to do: predict what a complex looks like, not how stable it is.
 
@@ -88,6 +94,6 @@ To check that the confidence head can respond to binding at all, I ran the WT do
 
 ## References
 
-- Abramson J, et al. Accurate structure prediction of biomolecular interactions with AlphaFold 3. *Nature* 630, 493–500 (2024).
-- Hudson BP, Martinez-Yamout MA, Dyson HJ, Wright PE. Recognition of the mRNA AU-rich element by the zinc finger domain of TIS11d. *Nat Struct Mol Biol* 11, 257–264 (2004).
-- Akçeşme B, et al. Identification of deleterious non-synonymous single nucleotide polymorphisms in the mRNA decay activator ZFP36L2. *RNA Biology* 22(1):1–15 (2025).
+- Abramson J, et al. Accurate structure prediction of biomolecular interactions with AlphaFold 3. *Nature* 630, 493-500 (2024).
+- Hudson BP, Martinez-Yamout MA, Dyson HJ, Wright PE. Recognition of the mRNA AU-rich element by the zinc finger domain of TIS11d. *Nat Struct Mol Biol* 11, 257-264 (2004).
+- Akçeşme B, et al. Identification of deleterious non-synonymous single nucleotide polymorphisms in the mRNA decay activator ZFP36L2. *RNA Biology* 22(1):1-15 (2025).
